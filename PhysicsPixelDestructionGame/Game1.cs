@@ -15,9 +15,10 @@ namespace PhysicsPixelDestructionGame
         private string gameState = "test";
         private int pixelsMade = 0;
         private MouseState mouseState = new MouseState();
-        private List<Pixel> pixels = new List<Pixel>();
         private Vector2 mousePosVect;
         private Texture2D whitePixel;
+        private List<Pixel> pixels = new List<Pixel>();
+        Color bg;
 
         public Game1()
         {
@@ -47,24 +48,25 @@ namespace PhysicsPixelDestructionGame
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape)) 
-            { 
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            {
                 Exit();
             }
             mouseState = Mouse.GetState();
             mousePosVect = new Vector2(mouseState.X, mouseState.Y);
-            switch(gameState)
+            switch (gameState)
             {
                 case "test":
                     if (mouseState.LeftButton == ButtonState.Pressed)
                     {
-                        Pixel pixel = new Pixel(whitePixel, mousePosVect, new Color(0, 255, 0), "concrete", pixels, pixelsMade);
+                        Pixel pixel = new Pixel(whitePixel, mousePosVect, "concrete", pixelsMade, false);
                         pixels.Add(pixel);
                         pixelsMade++;
                     }
-                    foreach (Pixel pixel1 in pixels)
+
+                    foreach (Pixel pixel in pixels)
                     {
-                        pixel1.Update(gameTime);
+                        pixel.Update(gameTime, pixels);
                     }
                     break;
 
@@ -91,7 +93,7 @@ namespace PhysicsPixelDestructionGame
                     break;
             }
             _spriteBatch.End();
-            
+
             base.Draw(gameTime);
         }
     }
