@@ -17,6 +17,7 @@ namespace PhysicsPixelDestructionGame
         private MouseState mouseState = new MouseState();
         private Vector2 mousePosVect;
         private Texture2D whitePixel;
+        private SpriteFont font;
         private List<Pixel> pixels = new List<Pixel>();
         Color bg;
 
@@ -42,6 +43,7 @@ namespace PhysicsPixelDestructionGame
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             whitePixel = Content.Load<Texture2D>("whitePixel");
+            font = Content.Load<SpriteFont>("font");
 
             // TODO: use this.Content to load your game content here
         }
@@ -54,14 +56,31 @@ namespace PhysicsPixelDestructionGame
             }
             mouseState = Mouse.GetState();
             mousePosVect = new Vector2(mouseState.X, mouseState.Y);
+            bool colliding = false;
             switch (gameState)
             {
                 case "test":
                     if (mouseState.LeftButton == ButtonState.Pressed)
                     {
                         Pixel pixel = new Pixel(whitePixel, mousePosVect, "concrete", pixelsMade, false);
-                        pixels.Add(pixel);
-                        pixelsMade++;
+                        Rectangle pixelEdge = new Rectangle((int)(pixel.Position.X + pixel.Velocity.X), (int)(pixel.Position.Y + pixel.Velocity.Y), (int)pixel.Width, (int)pixel.Height);
+                        foreach (Pixel pixel1 in pixels)
+                        {
+
+                            if (pixel1.pixelID != pixel.pixelID)
+                            {
+                                Rectangle pixel1Edge = new Rectangle((int)(pixel1.Position.X + pixel1.Velocity.X), (int)(pixel1.Position.Y + pixel1.Velocity.Y), (int)pixel1.Width, (int)pixel1.Height);
+                                if (pixelEdge.Intersects(pixel1Edge))
+                                {
+                                    colliding = true;
+                                }               
+                            }
+                        }
+                        if (!colliding)
+                        {
+                            pixels.Add(pixel);
+                            pixelsMade++;
+                        }
                     }
 
                     foreach (Pixel pixel in pixels)
@@ -90,7 +109,9 @@ namespace PhysicsPixelDestructionGame
                     {
                         pixel.Draw(_spriteBatch, gameTime);
                     }
+                    _spriteBatch.DrawString(font, pixelsMade.ToString(), new Vector2(200, 200), Color.Black);
                     break;
+
             }
             _spriteBatch.End();
 
