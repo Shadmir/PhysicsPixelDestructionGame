@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace LEarning
+namespace PhysicsPixelDestructionGame
 {
     class Sprite
     {
@@ -18,7 +18,7 @@ namespace LEarning
 
         public void Draw(SpriteBatch spriteBatch, Vector2 position, Color color)
         {
-            spriteBatch.Draw(Texture, position, color);
+            spriteBatch.Draw(Texture, new Rectangle((int)position.X, (int)position.Y, 10, 10), color);
         }
 
     }
