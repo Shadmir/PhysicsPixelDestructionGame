@@ -26,7 +26,7 @@ namespace PhysicsPixelDestructionGame
             pixelWithTint = new Sprite(texture);
             Position = position;
             pixelID = id;
-            Velocity.X = 10;
+            Velocity.X = r.Next(-10, 20);
             bonded = glue;
             switch (material)
             {
