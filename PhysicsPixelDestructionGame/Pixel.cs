@@ -21,23 +21,24 @@ namespace PhysicsPixelDestructionGame
         public int Width = 10;
         public int Height = 10;
 
-        public Pixel(Texture2D texture, Vector2 position, string material, int id, bool glue)
+        public Pixel(Texture2D texture, Vector2 position, string material, int id)
         {
             pixelWithTint = new Sprite(texture);
             Position = position;
             pixelID = id;
             Velocity.X = r.Next(-10, 20);
-            bonded = glue;
             switch (material)
             {
                 case "concrete":
                     Strength = 10;
                     colour = new Color((92 + r.Next(-10, 10)), (92 + r.Next(-10, 10)), (92 + r.Next(-10, 10)));
+                    bonded = false;
                     break;
 
                 case "steel":
                     Strength = 50;
                     colour = new Color((153 + r.Next(-10, 10)), (0 + r.Next(0, 10)), (0 + r.Next(0, 10)));
+                    bonded = true;
                     break;
 
                 case "wood":
@@ -125,15 +126,27 @@ namespace PhysicsPixelDestructionGame
                 }
                 colliding_with.Velocity.Y = 0;
                 Position.Y = colliding_with.Position.Y - Height;
-
             }
             if (colliding_L)
             {
                 colliding_with.Velocity = Velocity / 2;
                 Velocity.X /= 2;
             }
-
-
+            /*
+            if(colliding_L || colliding_B && colliding_with.bonded == true || bonded== true)
+            {
+                if (colliding_L)
+                {
+                    colliding_with.Position.X = Position.X - 10;
+                    colliding_with.Position.Y = Position.Y;
+                }
+                if (colliding_B)
+                {
+                    colliding_with.Position.Y = Position.Y + 10;
+                    colliding_with.Position.X = Position.X;
+                }
+            }
+            */
             Position += Velocity;
             Position.X -= Position.X % 10;
             Position.Y -= Position.Y % 10;
