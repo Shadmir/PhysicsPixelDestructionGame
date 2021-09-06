@@ -62,7 +62,7 @@ namespace PhysicsPixelDestructionGame
                 case "test":
                     if (mouseState.LeftButton == ButtonState.Pressed)
                     {
-                        Pixel pixel = new Pixel(whitePixel, mousePosVect, "concrete", pixelsMade, false);
+                        Pixel pixel = new Pixel(whitePixel, mousePosVect, "wood", pixelsMade, false);
                         Rectangle pixelEdge = new Rectangle((int)(pixel.Position.X + pixel.Velocity.X), (int)(pixel.Position.Y + pixel.Velocity.Y), (int)pixel.Width, (int)pixel.Height);
                         foreach (Pixel pixel1 in pixels)
                         {

@@ -32,7 +32,7 @@ namespace PhysicsPixelDestructionGame
             {
                 case "concrete":
                     Strength = 10;
-                    colour = new Color((192 + r.Next(-10, 10)), (192 + r.Next(-10, 10)), (192 + r.Next(-10, 10)));
+                    colour = new Color((92 + r.Next(-10, 10)), (92 + r.Next(-10, 10)), (92 + r.Next(-10, 10)));
                     break;
 
                 case "steel":
@@ -42,7 +42,7 @@ namespace PhysicsPixelDestructionGame
 
                 case "wood":
                     Strength = 1;
-                    colour = new Color((112 + r.Next(-10, 10)), (45 + r.Next(-10, 10)), (0 + r.Next(0, 10)));
+                    colour = new Color((162 + r.Next(-10, 10)), (95 + r.Next(-10, 10)), (50 + r.Next(0, 10)));
                     break;
 
                 default:
