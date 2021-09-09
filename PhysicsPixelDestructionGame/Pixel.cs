@@ -44,6 +44,7 @@ namespace PhysicsPixelDestructionGame
                 case "wood":
                     Strength = 1;
                     colour = new Color((162 + r.Next(-10, 10)), (95 + r.Next(-10, 10)), (50 + r.Next(0, 10)));
+                    bonded = true;
                     break;
 
                 default:
@@ -113,6 +114,7 @@ namespace PhysicsPixelDestructionGame
             }
 
 
+
             if (colliding_B)
             {
                 Velocity.Y = 0;
@@ -132,21 +134,7 @@ namespace PhysicsPixelDestructionGame
                 colliding_with.Velocity = Velocity / 2;
                 Velocity.X /= 2;
             }
-            /*
-            if(colliding_L || colliding_B && colliding_with.bonded == true || bonded== true)
-            {
-                if (colliding_L)
-                {
-                    colliding_with.Position.X = Position.X - 10;
-                    colliding_with.Position.Y = Position.Y;
-                }
-                if (colliding_B)
-                {
-                    colliding_with.Position.Y = Position.Y + 10;
-                    colliding_with.Position.X = Position.X;
-                }
-            }
-            */
+
             Position += Velocity;
             Position.X -= Position.X % 10;
             Position.Y -= Position.Y % 10;
