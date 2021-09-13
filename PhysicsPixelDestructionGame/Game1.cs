@@ -69,8 +69,8 @@ namespace PhysicsPixelDestructionGame
 
                             if (pixel1.pixelID != pixel.pixelID)
                             {
-                                Rectangle pixel1Edge = new Rectangle((int)(pixel1.Position.X + pixel1.Velocity.X), (int)(pixel1.Position.Y + pixel1.Velocity.Y), (int)pixel1.Width, (int)pixel1.Height);
-                                if (pixelEdge.Intersects(pixel1Edge))
+                                Rectangle otherPixelEdge = new Rectangle((int)(pixel1.Position.X + pixel1.Velocity.X), (int)(pixel1.Position.Y + pixel1.Velocity.Y), (int)pixel1.Width, (int)pixel1.Height);
+                                if (pixelEdge.Intersects(otherPixelEdge))
                                 {
                                     colliding = true;
                                 }               
@@ -80,6 +80,14 @@ namespace PhysicsPixelDestructionGame
                         {
                             pixels.Add(pixel);
                             pixelsMade++;
+                        }
+                    }
+                    if (mouseState.RightButton == ButtonState.Pressed)
+                    {
+                        if (pixels.Count > 0)
+                        {
+                            pixels.Remove(pixels[0]);
+                            pixelsMade--;
                         }
                     }
 
