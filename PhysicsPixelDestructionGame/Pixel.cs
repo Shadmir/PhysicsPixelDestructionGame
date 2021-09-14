@@ -20,7 +20,12 @@ namespace PhysicsPixelDestructionGame
         public bool bonded;
         public int Width = 9;
         public int Height = 9;
-        public int[] occupying = new int[3];
+        private List<Pixel> collidingWith = new List<Pixel>();
+        private bool collidingTopLeft = false;
+        private bool collidingTopRight = false;
+        private bool collidingBottomLeft = false;
+        private bool collidingBottomRight = false;
+
 
         public Pixel(Texture2D texture, Vector2 position, string material, int id)
         {
@@ -74,43 +79,47 @@ namespace PhysicsPixelDestructionGame
         {
             //need to look into the future for collision
             Velocity.Y += gravity;
-            if (Position.Y >= GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height - 11)
-            {
-                Velocity.Y = 0;
-                Velocity.X = 0;
-            }
-            if (Position.Y > GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height)
+            Position.X -= Position.X % 10;
+            Position.Y -= Position.Y % 10;
+            Rectangle futurePosition = new Rectangle((int)(Position.X + Velocity.X), (int)(Position.Y + Velocity.Y), Width, Height);
+            if (futurePosition.Y > GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height)
             {
                 Velocity.Y = 0;
                 Position.Y = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height - 10;
             }
-            if (Position.X > GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width || Position.X < 0)
+            if (futurePosition.X > GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width || futurePosition.X < 0)
             {
-                if (Position.X < 0)
+                if (futurePosition.X < 0)
                 {
                     Position.X = 0;
+                    Velocity.X = 0;
                 }
                 else
                 {
                     Position.X = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width - 10;
+                    Velocity.X = 0;
                 }
 
             }
+            collidingWith = new List<Pixel>();
             foreach (Pixel pixel in Pixels)
             {
                 if (pixelID != pixel.pixelID)
                 {
-                    
+                    Rectangle futureOtherPos = new Rectangle((int)(pixel.Position.X + pixel.Velocity.X), (int)(pixel.Position.Y + pixel.Velocity.Y), pixel.Width, pixel.Height);
+                    if (futurePosition.Intersects(futureOtherPos))
+                    {
+                        collidingWith.Add(pixel);
+                    }
                 }
             }
+            foreach (Pixel pixel in collidingWith)
+            {
+                // check is all 4 corners are contained, then do logic depending on which are contained
 
-
-
-           
+            }        
 
             Position += Velocity;
-            Position.X -= Position.X % 10;
-            Position.Y -= Position.Y % 10;
         }
 
     }
