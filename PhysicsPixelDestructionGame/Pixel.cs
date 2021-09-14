@@ -82,6 +82,12 @@ namespace PhysicsPixelDestructionGame
             Position.X -= Position.X % 10;
             Position.Y -= Position.Y % 10;
             Rectangle futurePosition = new Rectangle((int)(Position.X + Velocity.X), (int)(Position.Y + Velocity.Y), Width, Height);
+            if (futurePosition.Y >= GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height - 11)
+            {
+                Velocity.Y = 0;
+                Position.Y = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height - 10;
+                Velocity.X = 0;
+            }
             if (futurePosition.Y > GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height)
             {
                 Velocity.Y = 0;
