@@ -21,10 +21,8 @@ namespace PhysicsPixelDestructionGame
         public int Width = 9;
         public int Height = 9;
         private List<Pixel> collidingWith = new List<Pixel>();
-        private bool collidingTopLeft = false;
-        private bool collidingTopRight = false;
-        private bool collidingBottomLeft = false;
-        private bool collidingBottomRight = false;
+        private bool collidingRight = false;
+        private bool collidingBottom = false;
 
 
         public Pixel(Texture2D texture, Vector2 position, string material, int id)
@@ -82,14 +80,21 @@ namespace PhysicsPixelDestructionGame
             Position.X -= Position.X % 10;
             Position.Y -= Position.Y % 10;
             Rectangle futurePosition = new Rectangle((int)(Position.X + Velocity.X), (int)(Position.Y + Velocity.Y), Width, Height);
-            if (futurePosition.Y > GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height)
+            if (Position.Y >= GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height)
             {
                 Velocity.Y = 0;
                 Position.Y = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height - 10;
             }
-            if (futurePosition.X > GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width || futurePosition.X < 0)
+
+            if (Position.Y > GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height - 11)
             {
-                if (futurePosition.X < 0)
+                Velocity.Y = 0;
+                Position.Y = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height - 9;
+                Velocity.X /= 2;
+            }
+            if (Position.X > GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width || Position.X < 0)
+            {
+                if (Position.X < 0)
                 {
                     Position.X = 0;
                     Velocity.X = 0;
@@ -115,9 +120,20 @@ namespace PhysicsPixelDestructionGame
             }
             foreach (Pixel pixel in collidingWith)
             {
-                // check is all 4 corners are contained, then do logic depending on which are contained
-
-            }        
+                // check is right or bottom are contained.
+                if (futurePosition.Intersects(new Rectangle((int)pixel.Position.X + pixel.Width - 1, (int)pixel.Position.Y, 1, pixel.Height)))
+                {
+                    collidingRight = true;
+                }
+                if (futurePosition.Intersects(new Rectangle((int)pixel.Position.X, (int)pixel.Position.Y + pixel.Height - 1, pixel.Width - 1, 1)))
+                {
+                    collidingBottom = true;
+                }
+            }
+            if (collidingBottom || collidingRight)
+            {
+                Velocity = new Vector2(0, 0);
+            }
 
             Position += Velocity;
         }
