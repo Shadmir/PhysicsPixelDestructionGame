@@ -20,7 +20,7 @@ namespace PhysicsPixelDestructionGame
         public bool bonded;
         public int Width = 9;
         public int Height = 9;
-        private List<Pixel> collidingWith = new List<Pixel>();
+        private Pixel collidingWith = null;
         private bool collidingRight = false;
         private bool collidingBottom = false;
 
@@ -77,6 +77,7 @@ namespace PhysicsPixelDestructionGame
         {
             //need to look into the future for collision
             Velocity.Y += gravity;
+            Position += Velocity;
             Position.X -= Position.X % 10;
             Position.Y -= Position.Y % 10;
             Rectangle futurePosition = new Rectangle((int)(Position.X + Velocity.X), (int)(Position.Y + Velocity.Y), Width, Height);
@@ -84,13 +85,14 @@ namespace PhysicsPixelDestructionGame
             {
                 Velocity.Y = 0;
                 Position.Y = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height - 10;
+                Velocity.X = 0;
             }
 
             if (Position.Y > GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height - 11)
             {
                 Velocity.Y = 0;
                 Position.Y = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height - 9;
-                Velocity.X /= 2;
+                Velocity.X = 0;
             }
             if (Position.X > GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width || Position.X < 0)
             {
@@ -106,7 +108,10 @@ namespace PhysicsPixelDestructionGame
                 }
 
             }
-            collidingWith = new List<Pixel>();
+            collidingWith = null;
+            collidingRight = false;
+            collidingBottom = false;
+            colour = Color.Gray;
             foreach (Pixel pixel in Pixels)
             {
                 if (pixelID != pixel.pixelID)
@@ -114,14 +119,14 @@ namespace PhysicsPixelDestructionGame
                     Rectangle futureOtherPos = new Rectangle((int)(pixel.Position.X + pixel.Velocity.X), (int)(pixel.Position.Y + pixel.Velocity.Y), pixel.Width, pixel.Height);
                     if (futurePosition.Intersects(futureOtherPos))
                     {
-                        collidingWith.Add(pixel);
+                        collidingWith = pixel;
                     }
                 }
-            }
-            foreach (Pixel pixel in collidingWith)
-            {
+
                 // check is right or bottom are contained.
-                if (futurePosition.Intersects(new Rectangle((int)pixel.Position.X + pixel.Width - 1, (int)pixel.Position.Y, 1, pixel.Height)))
+
+                //CAN DO WITH MATHS FROM POSITION OF TOP LEFT PIXEL
+                if (futurePosition.Intersects(new Rectangle((int)pixel.Position.X + pixel.Width - 1, (int)pixel.Position.Y, 1, pixel.Height-2)))
                 {
                     collidingRight = true;
                 }
@@ -130,12 +135,30 @@ namespace PhysicsPixelDestructionGame
                     collidingBottom = true;
                 }
             }
-            if (collidingBottom || collidingRight)
+            if ((collidingBottom || collidingRight) && collidingWith != null)
             {
-                Velocity = new Vector2(0, 0);
+                if (collidingBottom)
+                {
+                    Velocity.Y = 0;
+                    Position.Y = collidingWith.Position.Y - Height;
+                    Velocity.X = 0;
+                    colour = Color.Black;
+                }
+                if (collidingRight)
+                {
+                    Velocity.X = 0;
+                    Position.X = collidingWith.Position.X - Width;
+                    colour = Color.Red;
+                }
+                if (collidingBottom && collidingRight)
+                {
+                    //while (collidingBottom && collidingRight)
+                    //{
+                        //if ()
+                    //}
+                }
             }
 
-            Position += Velocity;
         }
 
     }
