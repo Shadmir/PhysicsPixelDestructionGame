@@ -21,8 +21,9 @@ namespace PhysicsPixelDestructionGame
         public int Width = 9;
         public int Height = 9;
         private Pixel collidingWith = null;
-        private bool collidingRight = false;
-        private bool collidingBottom = false;
+        public int diffX = 0;
+        public int diffY = 0;
+        public Rectangle futurePosition = new Rectangle();
 
 
         public Pixel(Texture2D texture, Vector2 position, string material, int id)
@@ -30,7 +31,7 @@ namespace PhysicsPixelDestructionGame
             pixelWithTint = new Sprite(texture);
             Position = position;
             pixelID = id;
-            Velocity.X = r.Next(-10, 20);
+            //Velocity.X = r.Next(-10, 20);
             switch (material)
             {
                 case "concrete":
@@ -80,7 +81,7 @@ namespace PhysicsPixelDestructionGame
             Position += Velocity;
             Position.X -= Position.X % 10;
             Position.Y -= Position.Y % 10;
-            Rectangle futurePosition = new Rectangle((int)(Position.X + Velocity.X), (int)(Position.Y + Velocity.Y), Width, Height);
+            futurePosition = new Rectangle((int)(Position.X + Velocity.X), (int)(Position.Y + Velocity.Y), Width, Height);
             if (Position.Y >= GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height)
             {
                 Velocity.Y = 0;
@@ -109,8 +110,6 @@ namespace PhysicsPixelDestructionGame
 
             }
             collidingWith = null;
-            collidingRight = false;
-            collidingBottom = false;
             colour = Color.Gray;
             foreach (Pixel pixel in Pixels)
             {
@@ -125,38 +124,12 @@ namespace PhysicsPixelDestructionGame
 
                 // check is right or bottom are contained.
 
-                //CAN DO WITH MATHS FROM POSITION OF TOP LEFT PIXEL
-                if (futurePosition.Intersects(new Rectangle((int)pixel.Position.X + pixel.Width - 1, (int)pixel.Position.Y, 1, pixel.Height-2)))
-                {
-                    collidingRight = true;
-                }
-                if (futurePosition.Intersects(new Rectangle((int)pixel.Position.X, (int)pixel.Position.Y + pixel.Height - 1, pixel.Width - 1, 1)))
-                {
-                    collidingBottom = true;
-                }
+                //CAN DO WITH MATHS FROM POSITION OF TOP LEFT PIX  
             }
-            if ((collidingBottom || collidingRight) && collidingWith != null)
+            if (collidingWith != null)
             {
-                if (collidingBottom)
-                {
-                    Velocity.Y = 0;
-                    Position.Y = collidingWith.Position.Y - Height;
-                    Velocity.X = 0;
-                    colour = Color.Black;
-                }
-                if (collidingRight)
-                {
-                    Velocity.X = 0;
-                    Position.X = collidingWith.Position.X - Width;
-                    colour = Color.Red;
-                }
-                if (collidingBottom && collidingRight)
-                {
-                    //while (collidingBottom && collidingRight)
-                    //{
-                        //if ()
-                    //}
-                }
+                diffX = (int)futurePosition.X - (int)collidingWith.futurePosition.X;
+                diffY = (int)futurePosition.Y - (int)collidingWith.futurePosition.Y;
             }
 
         }
