@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -24,6 +25,7 @@ namespace PhysicsPixelDestructionGame
         public int diffX = 0;
         public int diffY = 0;
         public Rectangle futurePosition = new Rectangle();
+        public int mass;
 
 
         public Pixel(Texture2D texture, Vector2 position, string material, int id)
@@ -38,18 +40,21 @@ namespace PhysicsPixelDestructionGame
                     Strength = 10;
                     colour = new Color((92 + r.Next(-10, 10)), (92 + r.Next(-10, 10)), (92 + r.Next(-10, 10)));
                     bonded = false;
+                    mass = 3;
                     break;
 
                 case "steel":
                     Strength = 50;
                     colour = new Color((153 + r.Next(-10, 10)), (0 + r.Next(0, 10)), (0 + r.Next(0, 10)));
                     bonded = true;
+                    mass = 8;
                     break;
 
                 case "wood":
                     Strength = 1;
                     colour = new Color((162 + r.Next(-10, 10)), (95 + r.Next(-10, 10)), (50 + r.Next(0, 10)));
                     bonded = true;
+                    mass = 1;
                     break;
 
                 default:
@@ -81,7 +86,7 @@ namespace PhysicsPixelDestructionGame
             Position += Velocity;
             Position.X -= Position.X % 10;
             Position.Y -= Position.Y % 10;
-            futurePosition = new Rectangle((int)(Position.X + Velocity.X), (int)(Position.Y + Velocity.Y), Width, Height);
+            futurePosition = new Rectangle((int)(Position.X + Velocity.X) - ((int)(Position.X + Velocity.X) % 10), (int)(Position.Y + Velocity.Y) - ((int)(Position.Y + Velocity.Y) % 10), Width, Height);
             if (Position.Y >= GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height)
             {
                 Velocity.Y = 0;
@@ -115,21 +120,20 @@ namespace PhysicsPixelDestructionGame
             {
                 if (pixelID != pixel.pixelID)
                 {
-                    Rectangle futureOtherPos = new Rectangle((int)(pixel.Position.X + pixel.Velocity.X), (int)(pixel.Position.Y + pixel.Velocity.Y), pixel.Width, pixel.Height);
-                    if (futurePosition.Intersects(futureOtherPos))
+                    Rectangle futureOtherPos = new Rectangle(((int)(pixel.Position.X + pixel.Velocity.X) - ((int)(pixel.Position.X + pixel.Velocity.X) % 10)), ((int)(pixel.Position.Y + pixel.Velocity.Y) - ((int)(pixel.Position.Y + pixel.Velocity.Y) % 10)), pixel.Width, pixel.Height);
+                    if (futurePosition.Intersects(futureOtherPos) || Position == pixel.Position)
                     {
                         collidingWith = pixel;
                     }
                 }
-
-                // check is right or bottom are contained.
-
-                //CAN DO WITH MATHS FROM POSITION OF TOP LEFT PIX  
             }
             if (collidingWith != null)
             {
-                diffX = (int)futurePosition.X - (int)collidingWith.futurePosition.X;
-                diffY = (int)futurePosition.Y - (int)collidingWith.futurePosition.Y;
+                Position.X = r.Next(0, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width);
+                Position.Y = r.Next(0, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
+                //need to know where i'm coming from
+                //need to transfer velocity properly (need to assign each particle a mass?)
+                //if colliding and bonding, make a new data structure so I can move them all as one? cannot remove from pixel list
             }
 
         }
