@@ -17,7 +17,9 @@ namespace PhysicsPixelDestructionGame
         private MouseState mouseState = new MouseState();
         private Vector2 mousePosVect;
         private Texture2D whitePixel;
+        private Texture2D playerTexture;
         private SpriteFont font;
+        private Player player;
         private List<Pixel> pixels = new List<Pixel>();
         Color bg;
 
@@ -43,7 +45,9 @@ namespace PhysicsPixelDestructionGame
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             whitePixel = Content.Load<Texture2D>("whitePixel");
-            font = Content.Load<SpriteFont>("font");
+            playerTexture = Content.Load<Texture2D>("player");
+            player = new Player(playerTexture);
+            //font = Content.Load<SpriteFont>("font");
 
             // TODO: use this.Content to load your game content here
         }
@@ -109,7 +113,7 @@ namespace PhysicsPixelDestructionGame
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            _spriteBatch.Begin();
+            _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, null);
             switch (gameState)
             {
                 case "test":
@@ -117,7 +121,8 @@ namespace PhysicsPixelDestructionGame
                     {
                         pixel.Draw(_spriteBatch, gameTime);
                     }
-                    _spriteBatch.DrawString(font, pixelsMade.ToString(), new Vector2(200, 200), Color.Black);
+                    player.Draw(_spriteBatch, gameTime);
+                    //_spriteBatch.DrawString(font, pixelsMade.ToString(), new Vector2(200, 200), Color.Black);
                     break;
 
             }

@@ -16,9 +16,9 @@ namespace PhysicsPixelDestructionGame
             Texture = texture;
         }
 
-        public void Draw(SpriteBatch spriteBatch, Vector2 position, Color color)
+        public void Draw(SpriteBatch spriteBatch, Vector2 position, Vector2 size, Color color)
         {
-            spriteBatch.Draw(Texture, new Rectangle((int)position.X, (int)position.Y, 10, 10), color);
+            spriteBatch.Draw(Texture, new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y), color);
         }
 
     }

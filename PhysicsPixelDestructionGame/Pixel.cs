@@ -76,7 +76,7 @@ namespace PhysicsPixelDestructionGame
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            pixelWithTint.Draw(spriteBatch, Position, colour);
+            pixelWithTint.Draw(spriteBatch, Position, new Vector2(Width+1, Height+1), colour);
         }
 
         public void Update(GameTime gameTime, List<Pixel> Pixels)
