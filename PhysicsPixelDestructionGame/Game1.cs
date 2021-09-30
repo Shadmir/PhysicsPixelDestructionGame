@@ -20,8 +20,8 @@ namespace PhysicsPixelDestructionGame
         private Texture2D playerTexture;
         private SpriteFont font;
         private Player player;
+        private Pixel[,] pixArray;
         private List<Pixel> pixels = new List<Pixel>();
-        Color bg;
 
         public Game1()
         {
@@ -37,6 +37,7 @@ namespace PhysicsPixelDestructionGame
             _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height; // makes fullscreen & whatever current monitor res is
             _graphics.IsFullScreen = true;
             _graphics.ApplyChanges();
+            pixArray = new Pixel[GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 10, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 10];
             window = GraphicsDevice.Viewport.Bounds;
             base.Initialize();
         }
@@ -47,7 +48,7 @@ namespace PhysicsPixelDestructionGame
             whitePixel = Content.Load<Texture2D>("whitePixel");
             playerTexture = Content.Load<Texture2D>("player");
             player = new Player(playerTexture);
-            //font = Content.Load<SpriteFont>("font");
+            font = Content.Load<SpriteFont>("font");
 
             // TODO: use this.Content to load your game content here
         }
@@ -60,45 +61,18 @@ namespace PhysicsPixelDestructionGame
             }
             mouseState = Mouse.GetState();
             mousePosVect = new Vector2(mouseState.X, mouseState.Y);
-            bool colliding = false;
             switch (gameState)
             {
                 case "test":
-                    if (mouseState.LeftButton == ButtonState.Pressed)
+                    if (pixels.Count != 0)
                     {
-                        Pixel pixel = new Pixel(whitePixel, mousePosVect, "concrete", pixelsMade);
-                        Rectangle pixelEdge = new Rectangle((int)(pixel.Position.X + pixel.Velocity.X), (int)(pixel.Position.Y + pixel.Velocity.Y), (int)pixel.Width, (int)pixel.Height);
-                        foreach (Pixel pixel1 in pixels)
+                        foreach (var pixel in pixels)
                         {
-
-                            if (pixel1.pixelID != pixel.pixelID)
-                            {
-                                Rectangle otherPixelEdge = new Rectangle((int)(pixel1.Position.X + pixel1.Velocity.X), (int)(pixel1.Position.Y + pixel1.Velocity.Y), (int)pixel1.Width, (int)pixel1.Height);
-                                if (pixelEdge.Intersects(otherPixelEdge))
-                                {
-                                    colliding = true;
-                                }               
-                            }
-                        }
-                        if (!colliding)
-                        {
-                            pixels.Add(pixel);
-                            pixelsMade++;
-                        }
-                    }
-                    if (mouseState.RightButton == ButtonState.Pressed)
-                    {
-                        if (pixels.Count > 0)
-                        {
-                            pixels.Remove(pixels[0]);
-                            pixelsMade--;
+                            pixArray[(int)pixel.Position.Y / 10, (int)pixel.Position.X / 10] = pixel; 
                         }
                     }
 
-                    foreach (Pixel pixel in pixels)
-                    {
-                        pixel.Update(gameTime, pixels);
-                    }
+                    player.Update(gameTime);
                     break;
 
                 default:
@@ -122,7 +96,7 @@ namespace PhysicsPixelDestructionGame
                         pixel.Draw(_spriteBatch, gameTime);
                     }
                     player.Draw(_spriteBatch, gameTime);
-                    //_spriteBatch.DrawString(font, pixelsMade.ToString(), new Vector2(200, 200), Color.Black);
+                    _spriteBatch.DrawString(font, pixelsMade.ToString(), new Vector2(200, 200), Color.Black);
                     break;
 
             }
