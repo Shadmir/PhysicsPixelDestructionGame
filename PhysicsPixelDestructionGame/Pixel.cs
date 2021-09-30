@@ -41,12 +41,9 @@ namespace PhysicsPixelDestructionGame
         }
 
         public void Update(GameTime gameTime)
-        {
-            //need to look into the future for collision
-           
+        {  
 
         }
-
     }
 }
 
