@@ -25,8 +25,9 @@ namespace PhysicsPixelDestructionGame
             pixelWithTint = new Sprite(texture);
             Position = position;
             pixelID = id;
-
+            colour = Color.White;
         }
+
         public Pixel(Sprite sprite, Vector2 position, Color color, int id)
         {
             pixelWithTint = sprite;

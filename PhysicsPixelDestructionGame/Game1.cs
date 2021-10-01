@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace PhysicsPixelDestructionGame
 {
@@ -22,6 +23,7 @@ namespace PhysicsPixelDestructionGame
         private Player player;
         private Pixel[,] pixArray;
         private List<Pixel> pixels = new List<Pixel>();
+        private string debugString = "default";
 
         public Game1()
         {
@@ -37,7 +39,7 @@ namespace PhysicsPixelDestructionGame
             _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height; // makes fullscreen & whatever current monitor res is
             _graphics.IsFullScreen = true;
             _graphics.ApplyChanges();
-            pixArray = new Pixel[GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 10, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 10];
+            pixArray = new Pixel[GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 10 + 1, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 10 + 1];
             window = GraphicsDevice.Viewport.Bounds;
             base.Initialize();
         }
@@ -49,8 +51,22 @@ namespace PhysicsPixelDestructionGame
             playerTexture = Content.Load<Texture2D>("player");
             player = new Player(playerTexture);
             font = Content.Load<SpriteFont>("font");
-
+            //GenerateTerrain();
             // TODO: use this.Content to load your game content here
+            //need to generate terrain here??? or perhaps change method call for generating terrain to link to start menu button
+
+        }
+        protected void GenerateTerrain()
+        {
+            for (int x = 0; x < GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 10 + 1; x++)
+            {
+                for (int y = 0; y < GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 10 + 1; y++)
+                {
+                    pixels.Add(new Pixel(whitePixel, new Vector2(x * 10, y * 10), pixelsMade));
+                    pixelsMade++;
+                    debugString = "Terrain Generated";
+                }
+            }
         }
 
         protected override void Update(GameTime gameTime)
@@ -61,6 +77,7 @@ namespace PhysicsPixelDestructionGame
             }
             mouseState = Mouse.GetState();
             mousePosVect = new Vector2(mouseState.X, mouseState.Y);
+            bool colliding = false;
             switch (gameState)
             {
                 case "test":
@@ -68,7 +85,45 @@ namespace PhysicsPixelDestructionGame
                     {
                         foreach (var pixel in pixels)
                         {
-                            pixArray[(int)pixel.Position.Y / 10, (int)pixel.Position.X / 10] = pixel; 
+                            pixArray[(int)pixel.Position.Y / 10, (int)pixel.Position.X / 10] = pixel;
+                        }
+                    }
+                    if (mouseState.LeftButton == ButtonState.Pressed)
+                    {
+                        foreach (var pixel in pixels)
+                        {
+                            if (new Rectangle((int)mousePosVect.X, (int)mousePosVect.Y, 10, 10).Intersects(new Rectangle((int)pixel.Position.X, (int)pixel.Position.Y, 10, 10)))
+                            {
+                                colliding = true;
+                            }
+                            else
+                            {
+                                colliding = false;
+                            }
+                        }
+                        if (!colliding)
+                        {
+                            pixels.Add(new Pixel(whitePixel, new Vector2(mousePosVect.X - mousePosVect.X % 10, mousePosVect.Y - mousePosVect.Y % 10), pixelsMade));
+                            pixelsMade++;
+                        }
+                    }
+                    if (mouseState.RightButton == ButtonState.Pressed)
+                    {
+                        using (StreamWriter sw = new StreamWriter("terrain.txt"))
+                        {
+                            string line = "";
+                            for (int i = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 10; i > -1; i--)
+                            {
+                                for (int j = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 10; j > -1; j--)
+                                {
+                                    if (pixArray[i, j] != null)
+                                    {
+                                        line += "new Pixel(whitePixel, new Vector2(" + pixArray[i, j].Position.X + ", " + pixArray[i, j].Position.Y + ")," + pixArray[i, j].pixelID + "),";
+                                    }
+                                }
+                                sw.WriteLine(line);
+                                line = "";
+                            }
                         }
                     }
 
@@ -96,7 +151,7 @@ namespace PhysicsPixelDestructionGame
                         pixel.Draw(_spriteBatch, gameTime);
                     }
                     player.Draw(_spriteBatch, gameTime);
-                    _spriteBatch.DrawString(font, pixelsMade.ToString(), new Vector2(200, 200), Color.Black);
+                    _spriteBatch.DrawString(font, debugString, new Vector2(200, 200), Color.Black);
                     break;
 
             }
