@@ -13,7 +13,7 @@ namespace PhysicsPixelDestructionGame
         private SpriteBatch _spriteBatch;
         private Rectangle window;
         private const float gravity = 16.35f; //real life g at 60fps assuming 100px = 1m
-        private string gameState = "test";
+        private string gameState = "terraincreator";
         private int pixelsMade = 0;
         private MouseState mouseState = new MouseState();
         private Vector2 mousePosVect;
@@ -59,21 +59,30 @@ namespace PhysicsPixelDestructionGame
         protected void GenerateTerrain(int level)
         {
             string inputLine = "";
-            using (StreamReader sr = new StreamReader("terrain.txt"))
+            try
             {
-                for (int i = 0; i < level + 1; i++)
+                using (StreamReader sr = new StreamReader("terrain.txt"))
                 {
-                    inputLine = sr.ReadLine();
+                    for (int i = 0; i < level + 1; i++)
+                    {
+                        inputLine = sr.ReadLine();
+                    }
+                    string[] inputSplit = inputLine.Split(":");
+                    for (int i = 0; i < inputSplit.Length - 1; i++)
+                    {
+                        string[] pixDefSplit = inputSplit[i].Split(",");
+                        debugString = pixDefSplit[pixDefSplit.Length - 1];
+                        pixels.Add(new Pixel(whitePixel, new Vector2(float.Parse(pixDefSplit[0]), float.Parse(pixDefSplit[1])), int.Parse(pixDefSplit[2])));
+                        pixelsMade++;
+
+                    }
                 }
-                string[] inputSplit = inputLine.Split(":");
-                foreach (var pixdef in inputSplit)
-                {
-                    string[] pixDefSplit = pixdef.Split(",");
-                    
-                    pixels.Add(new Pixel(whitePixel, new Vector2(float.Parse(pixDefSplit[0]), float.Parse(pixDefSplit[1])), int.Parse(pixDefSplit[2])));
-                    pixelsMade++;
-                }
+            } catch (Exception e)
+            {
+                debugString = "No terrain file found.";
+
             }
+
         }
 
         protected override void Update(GameTime gameTime)
@@ -87,7 +96,8 @@ namespace PhysicsPixelDestructionGame
             bool colliding = false;
             switch (gameState)
             {
-                case "test":
+                case "terraincreator":
+
                     if (pixels.Count != 0)
                     {
                         foreach (var pixel in pixels)
@@ -146,7 +156,7 @@ namespace PhysicsPixelDestructionGame
             _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, null);
             switch (gameState)
             {
-                case "test":
+                case "terraincreator":
                     foreach (Pixel pixel in pixels)
                     {
                         pixel.Draw(_spriteBatch, gameTime);
