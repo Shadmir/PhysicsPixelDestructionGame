@@ -23,7 +23,7 @@ namespace PhysicsPixelDestructionGame
         private Player player;
         private Pixel[,] pixArray;
         private List<Pixel> pixels = new List<Pixel>();
-        private string debugString = "default";
+        private string debugString = "";
 
         public Game1()
         {
@@ -51,20 +51,27 @@ namespace PhysicsPixelDestructionGame
             playerTexture = Content.Load<Texture2D>("player");
             player = new Player(playerTexture);
             font = Content.Load<SpriteFont>("font");
-            //GenerateTerrain();
+            GenerateTerrain(0);
             // TODO: use this.Content to load your game content here
             //need to generate terrain here??? or perhaps change method call for generating terrain to link to start menu button
 
         }
-        protected void GenerateTerrain()
+        protected void GenerateTerrain(int level)
         {
-            for (int x = 0; x < GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 10 + 1; x++)
+            string inputLine = "";
+            using (StreamReader sr = new StreamReader("terrain.txt"))
             {
-                for (int y = 0; y < GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 10 + 1; y++)
+                for (int i = 0; i < level + 1; i++)
                 {
-                    pixels.Add(new Pixel(whitePixel, new Vector2(x * 10, y * 10), pixelsMade));
+                    inputLine = sr.ReadLine();
+                }
+                string[] inputSplit = inputLine.Split(":");
+                foreach (var pixdef in inputSplit)
+                {
+                    string[] pixDefSplit = pixdef.Split(",");
+                    
+                    pixels.Add(new Pixel(whitePixel, new Vector2(float.Parse(pixDefSplit[0]), float.Parse(pixDefSplit[1])), int.Parse(pixDefSplit[2])));
                     pixelsMade++;
-                    debugString = "Terrain Generated";
                 }
             }
         }
@@ -112,20 +119,14 @@ namespace PhysicsPixelDestructionGame
                         using (StreamWriter sw = new StreamWriter("terrain.txt"))
                         {
                             string line = "";
-                            for (int i = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 10; i > -1; i--)
+                            foreach (var pixel in pixels)
                             {
-                                for (int j = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 10; j > -1; j--)
-                                {
-                                    if (pixArray[i, j] != null)
-                                    {
-                                        line += "new Pixel(whitePixel, new Vector2(" + pixArray[i, j].Position.X + ", " + pixArray[i, j].Position.Y + ")," + pixArray[i, j].pixelID + "),";
-                                    }
-                                }
-                                sw.WriteLine(line);
-                                line = "";
+                                line += "" + pixel.Position.X.ToString() + "," + pixel.Position.Y.ToString() + "," + pixel.pixelID.ToString() + ":";
                             }
+                            sw.Write(line);
                         }
                     }
+
 
                     player.Update(gameTime);
                     break;
