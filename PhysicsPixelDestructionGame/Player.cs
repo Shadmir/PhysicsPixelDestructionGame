@@ -23,9 +23,11 @@ namespace PhysicsPixelDestructionGame
         {
             playerPicture.Draw(spriteBatch, position, new Vector2(50, 25), Color.White);
         }
-        public void Update(GameTime gameTime)
+        public void Update(GameTime gameTime, Pixel[,] map)
         {
+            
             keyState = Keyboard.GetState();
+            //TODO use velocities instead of updating position directly
             if (keyState.IsKeyDown(Keys.D))
             {
                 position.X += 5;
@@ -42,6 +44,10 @@ namespace PhysicsPixelDestructionGame
             {
                 position.Y += 5;
             }
+            //TODO need logic for floor collisions
+
+            
+
             lastState = keyState;
         }
     }

@@ -39,7 +39,8 @@ namespace PhysicsPixelDestructionGame
             _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height; // makes fullscreen & whatever current monitor res is
             _graphics.IsFullScreen = true;
             _graphics.ApplyChanges();
-            pixArray = new Pixel[GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 10 + 1, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 10 + 1];
+            //pixArray = new Pixel[(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 10) + 1, (GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 10) + 1];
+            pixArray = new Pixel[(1080 / 10) + 1, (1920 / 10) + 1];
             window = GraphicsDevice.Viewport.Bounds;
             base.Initialize();
         }
@@ -102,7 +103,7 @@ namespace PhysicsPixelDestructionGame
                     {
                         foreach (var pixel in pixels)
                         {
-                            pixArray[(int)pixel.Position.Y / 10, (int)pixel.Position.X / 10] = pixel;
+                            pixArray[(int)(pixel.Position.Y / 10), (int)(pixel.Position.X / 10)] = pixel;
                         }
                     }
                     if (mouseState.LeftButton == ButtonState.Pressed)
@@ -138,7 +139,7 @@ namespace PhysicsPixelDestructionGame
                     }
 
 
-                    player.Update(gameTime);
+                    player.Update(gameTime, pixArray);
                     break;
 
                 default:
@@ -167,7 +168,8 @@ namespace PhysicsPixelDestructionGame
 
             }
             _spriteBatch.End();
-
+            //TODO add menu and playing gamestate
+            //TODO add logic to check if pixels are close to the edge
             base.Draw(gameTime);
         }
     }
