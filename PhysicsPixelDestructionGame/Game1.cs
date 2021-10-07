@@ -139,7 +139,7 @@ namespace PhysicsPixelDestructionGame
                     }
 
 
-                    player.Update(gameTime, pixArray);
+                    player.Update(gameTime, pixels);
                     break;
 
                 default:

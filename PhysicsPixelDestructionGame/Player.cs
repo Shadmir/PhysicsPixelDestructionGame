@@ -12,7 +12,8 @@ namespace PhysicsPixelDestructionGame
     {
         private KeyboardState keyState;
         private KeyboardState lastState;
-        private Vector2 position;
+        public Vector2 position;
+        public Vector2 velocity = new Vector2 (0, 0);
         public Sprite playerPicture;
         public Player(Texture2D texture)
         {
@@ -23,31 +24,42 @@ namespace PhysicsPixelDestructionGame
         {
             playerPicture.Draw(spriteBatch, position, new Vector2(50, 25), Color.White);
         }
-        public void Update(GameTime gameTime, Pixel[,] map)
+        public void Update(GameTime gameTime, List<Pixel> pixels)
         {
             
             keyState = Keyboard.GetState();
-            //TODO use velocities instead of updating position directly
             if (keyState.IsKeyDown(Keys.D))
             {
-                position.X += 5;
+                velocity.X = 5;
             }
             if (keyState.IsKeyDown(Keys.A))
             {
-                position.X -= 5;
+                velocity.X = -5;
             }
             if (keyState.IsKeyDown(Keys.W))
             {
-                position.Y -= 5;
+                velocity.Y = -15;
             }
             if (keyState.IsKeyDown(Keys.S))
             {
-                position.Y += 5;
+                velocity.Y = 5;
+            }
+            if (keyState.IsKeyUp(Keys.W) && keyState.IsKeyUp(Keys.S))
+            {
+                velocity.Y = 0;
+            }
+            if (keyState.IsKeyUp(Keys.A) && keyState.IsKeyUp(Keys.D))
+            {
+                velocity.X = 0;
             }
             //TODO need logic for floor collisions
+            int placeholder = 0;
+            if ((position.Y - (position.Y % 10)) / 10 == placeholder)
+            {
 
-            
-
+            }
+            //Doing it there ^
+            position += velocity;
             lastState = keyState;
         }
     }
