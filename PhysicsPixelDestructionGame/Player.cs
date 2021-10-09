@@ -38,7 +38,7 @@ namespace PhysicsPixelDestructionGame
             }
             if (keyState.IsKeyDown(Keys.W))
             {
-                velocity.Y = -15;
+                velocity.Y = -5;
             }
             if (keyState.IsKeyDown(Keys.S))
             {
