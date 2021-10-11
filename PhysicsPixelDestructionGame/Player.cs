@@ -8,10 +8,14 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace PhysicsPixelDestructionGame
 {
+    //TODO: create algorithm to search map given position of player and find the nearest suitable open space. Perhaps make player 1x1 in terms of
+    //size and just cramp up their sprite if surrounded by pixels?
     class Player
     {
         private KeyboardState keyState;
         private KeyboardState lastState;
+        private Vector2 freePos;
+        private bool colliding = false;
         public Vector2 position;
         public Vector2 velocity = new Vector2 (0, 0);
         public Sprite playerPicture;
@@ -24,9 +28,9 @@ namespace PhysicsPixelDestructionGame
         {
             playerPicture.Draw(spriteBatch, position, new Vector2(50, 25), Color.White);
         }
-        public void Update(GameTime gameTime, List<Pixel> pixels)
+        public void Update(GameTime gameTime, List<Pixel> pixels, Pixel[,] map)
         {
-            
+            freePos = new Vector2(0, 0);
             keyState = Keyboard.GetState();
             if (keyState.IsKeyDown(Keys.D))
             {
@@ -53,10 +57,33 @@ namespace PhysicsPixelDestructionGame
                 velocity.X = 0;
             }
             //TODO need logic for floor collisions
-            int placeholder = 0;
-            if ((position.Y - (position.Y % 10)) / 10 == placeholder)
+            velocity.Y += 1;
+            colliding = false;
+            foreach (Pixel pixel in pixels)
             {
-
+                Rectangle pixelPos = new Rectangle((int)pixel.Position.X, (int)pixel.Position.Y, pixel.Width, pixel.Height);
+                Rectangle playerPos = new Rectangle((int)position.X, (int)position.Y, 19, 9);
+                if (playerPos.Intersects(pixelPos))
+                {
+                    colliding = true;
+                    if (pixel.Position.Y < freePos.Y) // move up and out of intersecting pixel.
+                    {
+                        freePos.Y = pixel.Position.Y-1;
+                        velocity.Y = 0;
+                    }
+                    // need logic to find the nearest open pixel space to teleport to.
+                    for (int i = 0; i < 192; i++)
+                    {
+                        if(map[((int)position.Y / 10), i] == null && position.X - (i * 10) < position.X - freePos.X)
+                        {
+                            //freePos.X = i * 10;
+                        }
+                    }
+                }
+                if (colliding)
+                {
+                    position = freePos;
+                }
             }
             //Doing it there ^
             position += velocity;
