@@ -95,7 +95,7 @@ namespace PhysicsPixelDestructionGame
             mouseState = Mouse.GetState();
             mousePosVect = new Vector2(mouseState.X, mouseState.Y);
             bool colliding = false;
-            debugString = player.position.X.ToString() + "," + player.position.Y.ToString();
+            debugString = player.position.X.ToString() + "," + player.position.Y.ToString() + "," + player.velocity.Y.ToString();
             switch (gameState)
             {
                 case "terraincreator":

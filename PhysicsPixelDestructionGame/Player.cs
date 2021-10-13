@@ -17,11 +17,13 @@ namespace PhysicsPixelDestructionGame
         private Vector2 freePos;
         private bool colliding = false;
         public Vector2 position;
-        public Vector2 velocity = new Vector2 (0, 0);
+        public Vector2 velocity;
         public Sprite playerPicture;
         public Player(Texture2D texture)
         {
             playerPicture = new Sprite(texture);
+            position = new Vector2(0, 0);
+            velocity = new Vector2(0, 0);
         }
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
@@ -48,7 +50,7 @@ namespace PhysicsPixelDestructionGame
             {
                 velocity.Y = 5;
             }
-            if (keyState.IsKeyUp(Keys.W) && keyState.IsKeyUp(Keys.S))
+            if (keyState.IsKeyUp(Keys.W) && keyState.IsKeyUp(Keys.S) && (lastState.IsKeyDown(Keys.W) || lastState.IsKeyDown(Keys.S)))
             {
                 velocity.Y = 0;
             }
@@ -56,7 +58,7 @@ namespace PhysicsPixelDestructionGame
             {
                 velocity.X = 0;
             }
-            //TODO need logic for floor collisions
+            //TODO need logic for floor collisions. is still very janky
             velocity.Y += 1;
             colliding = false;
             foreach (Pixel pixel in pixels)
@@ -68,22 +70,12 @@ namespace PhysicsPixelDestructionGame
                     colliding = true;
                     if (pixel.Position.Y < freePos.Y) // move up and out of intersecting pixel.
                     {
-                        freePos.Y = pixel.Position.Y-1;
+                        freePos.Y = pixel.Position.Y - 1;
                         velocity.Y = 0;
                     }
                     // need logic to find the nearest open pixel space to teleport to.
-                    for (int i = 0; i < 192; i++)
-                    {
-                        if(map[((int)position.Y / 10), i] == null && position.X - (i * 10) < position.X - freePos.X)
-                        {
-                            //freePos.X = i * 10;
-                        }
-                    }
-                }
-                if (colliding)
-                {
-                    position = freePos;
-                }
+
+                }   
             }
             //Doing it there ^
             position += velocity;
