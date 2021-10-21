@@ -61,7 +61,6 @@ namespace PhysicsPixelDestructionGame
             {
                 velocity.X = 0;
             }
-            //TODO need logic for floor collisions. is still very janky
             velocity.Y += 1;
 
             colliding = false;
