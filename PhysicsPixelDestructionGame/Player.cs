@@ -19,6 +19,9 @@ namespace PhysicsPixelDestructionGame
         public Vector2 position;
         public Vector2 velocity;
         public Sprite playerPicture;
+        public Rectangle playerFuturePos;
+        public int width = 49;
+        public int height = 24;
         public Player(Texture2D texture)
         {
             playerPicture = new Sprite(texture);
@@ -60,23 +63,36 @@ namespace PhysicsPixelDestructionGame
             }
             //TODO need logic for floor collisions. is still very janky
             velocity.Y += 1;
+
             colliding = false;
+            if (velocity.Y >= 10)
+            {
+                velocity.Y = 9;
+            }
+            if (velocity.Y <= -10)
+            {
+                velocity.Y = -9;
+            }
+
+            playerFuturePos = new Rectangle((int)(position.X + velocity.X), (int)(position.Y + velocity.Y), width, height);
             foreach (Pixel pixel in pixels)
             {
                 Rectangle pixelPos = new Rectangle((int)pixel.Position.X, (int)pixel.Position.Y, pixel.Width, pixel.Height);
-                Rectangle playerPos = new Rectangle((int)position.X, (int)position.Y, 19, 9);
+                Rectangle playerPos = new Rectangle((int)position.X, (int)position.Y, width, height);
                 if (playerPos.Intersects(pixelPos))
                 {
                     colliding = true;
-                    if (pixel.Position.Y < freePos.Y) // move up and out of intersecting pixel.
-                    {
-                        freePos.Y = pixel.Position.Y - 1;
-                        velocity.Y = 0;
-                    }
-                    // need logic to find the nearest open pixel space to teleport to.
-
-                }   
+                    //position.X -= 10;
+                    position.Y -= 10;
+                }
+                if (playerFuturePos.Intersects(pixelPos))
+                {
+                    //velocity.X = 0;
+                    velocity.Y = 0;
+                }
+                //speculative contact ^
             }
+
             //Doing it there ^
             position += velocity;
             lastState = keyState;
