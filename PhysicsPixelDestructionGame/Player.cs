@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 
 
 namespace PhysicsPixelDestructionGame
@@ -25,6 +23,7 @@ namespace PhysicsPixelDestructionGame
         public int height = 25;
         public long framesAlive = 0L;
         public long lastFrameJumped = 0L;
+        public int health = 100;
         public Player(Texture2D texture)
         {
             playerPicture = new Sprite(texture);
