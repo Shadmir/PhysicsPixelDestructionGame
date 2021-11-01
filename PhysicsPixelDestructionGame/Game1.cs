@@ -13,7 +13,7 @@ namespace PhysicsPixelDestructionGame
         private SpriteBatch _spriteBatch;
         private Rectangle window;
         private const float gravity = 16.35f; //real life g at 60fps assuming 100px = 1m
-        private string gameState = "terraincreator";
+        private string gameState = "test";
         private int pixelsMade = 0;
         private MouseState mouseState = new MouseState();
         private Vector2 mousePosVect;
@@ -49,7 +49,7 @@ namespace PhysicsPixelDestructionGame
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             whitePixel = Content.Load<Texture2D>("whitePixel");
-            playerTexture = Content.Load<Texture2D>("player");
+            playerTexture = Content.Load<Texture2D>("playerSheet");
             player = new Player(playerTexture);
             font = Content.Load<SpriteFont>("font");
             GenerateTerrain(0);
@@ -142,6 +142,17 @@ namespace PhysicsPixelDestructionGame
 
                     player.Update(gameTime, pixels, pixArray);
                     break;
+                case "test":
+
+                    if (pixels.Count != 0)
+                    {
+                        foreach (var pixel in pixels)
+                        {
+                            pixArray[(int)(pixel.Position.Y / 10), (int)(pixel.Position.X / 10)] = pixel;
+                        }
+                    }
+                    player.Update(gameTime, pixels, pixArray);
+                    break;
 
                 default:
                     break;
@@ -159,6 +170,14 @@ namespace PhysicsPixelDestructionGame
             switch (gameState)
             {
                 case "terraincreator":
+                    foreach (Pixel pixel in pixels)
+                    {
+                        pixel.Draw(_spriteBatch, gameTime);
+                    }
+                    player.Draw(_spriteBatch, gameTime);
+                    _spriteBatch.DrawString(font, debugString, new Vector2(200, 200), Color.Black);
+                    break;
+                case "test":
                     foreach (Pixel pixel in pixels)
                     {
                         pixel.Draw(_spriteBatch, gameTime);

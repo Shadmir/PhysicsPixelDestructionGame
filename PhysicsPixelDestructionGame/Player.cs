@@ -10,18 +10,21 @@ namespace PhysicsPixelDestructionGame
 {
     //TODO: create algorithm to search map given position of player and find the nearest suitable open space. Perhaps make player 1x1 in terms of
     //size and just cramp up their sprite if surrounded by pixels?
+
+    //size of player spritesheet is 10x40
     class Player
     {
         private KeyboardState keyState;
         private KeyboardState lastState;
-        private Vector2 freePos;
-        private bool colliding = false;
         public Vector2 position;
         public Vector2 velocity;
         public Sprite playerPicture;
         public Rectangle playerFuturePos;
-        public int width = 49;
-        public int height = 24;
+        public Rectangle spriteRectangle = new Rectangle(0, 0, 20, 10);
+        public int width = 50;
+        public int height = 25;
+        public long framesAlive = 0L;
+        public long lastFrameJumped = 0L;
         public Player(Texture2D texture)
         {
             playerPicture = new Sprite(texture);
@@ -31,23 +34,29 @@ namespace PhysicsPixelDestructionGame
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            playerPicture.Draw(spriteBatch, position, new Vector2(50, 25), Color.White);
+            playerPicture.Draw(spriteBatch, spriteRectangle, new Rectangle((int)position.X, (int)position.Y, width, height), Color.White);
         }
         public void Update(GameTime gameTime, List<Pixel> pixels, Pixel[,] map)
         {
-            freePos = new Vector2(0, 0);
+            framesAlive++;
             keyState = Keyboard.GetState();
             if (keyState.IsKeyDown(Keys.D))
             {
                 velocity.X = 5;
+                spriteRectangle = new Rectangle(20, 0, 20, 10);
             }
             if (keyState.IsKeyDown(Keys.A))
             {
                 velocity.X = -5;
+                spriteRectangle = new Rectangle(0, 0, 20, 10);
             }
             if (keyState.IsKeyDown(Keys.W))
             {
-                velocity.Y = -5;
+                if (framesAlive - lastFrameJumped > 25)
+                {
+                    lastFrameJumped = framesAlive;
+                    velocity.Y = -20;
+                }
             }
             if (keyState.IsKeyDown(Keys.S))
             {
@@ -63,7 +72,6 @@ namespace PhysicsPixelDestructionGame
             }
             velocity.Y += 1;
 
-            colliding = false;
             if (velocity.Y >= 10)
             {
                 velocity.Y = 9;
@@ -80,19 +88,20 @@ namespace PhysicsPixelDestructionGame
                 Rectangle playerPos = new Rectangle((int)position.X, (int)position.Y, width, height);
                 if (playerPos.Intersects(pixelPos))
                 {
-                    colliding = true;
+                    
                     //position.X -= 10;
                     position.Y -= 10;
                 }
                 if (playerFuturePos.Intersects(pixelPos))
                 {
                     //velocity.X = 0;
+
                     velocity.Y = 0;
                 }
+
                 //speculative contact ^
             }
 
-            //Doing it there ^
             position += velocity;
             lastState = keyState;
         }

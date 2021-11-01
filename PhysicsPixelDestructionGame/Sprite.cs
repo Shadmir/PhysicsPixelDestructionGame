@@ -21,5 +21,9 @@ namespace PhysicsPixelDestructionGame
             spriteBatch.Draw(Texture, new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y), color);
         }
 
+        public void Draw(SpriteBatch spriteBatch, Rectangle inputRectangle, Rectangle outputRectangle, Color color)
+        {
+            spriteBatch.Draw(Texture, outputRectangle, inputRectangle, color);
+        }
     }
 }
