@@ -20,8 +20,8 @@ namespace PhysicsPixelDestructionGame
         public Vector2 velocity;
         public Sprite playerPicture;
         public Rectangle playerFuturePos;
-        public int width = 49;
-        public int height = 24;
+        public int width = 50;
+        public int height = 25;
         public Player(Texture2D texture)
         {
             playerPicture = new Sprite(texture);
