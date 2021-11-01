@@ -100,7 +100,13 @@ namespace PhysicsPixelDestructionGame
             {
                 case "terraincreator":
 
-                   
+                    if (pixels.Count != 0)
+                    {
+                        foreach (var pixel in pixels)
+                        {
+                            pixArray[(int)(pixel.Position.Y / 10), (int)(pixel.Position.X / 10)] = pixel;
+                        }
+                    }
                     if (mouseState.LeftButton == ButtonState.Pressed)
                     {
                         foreach (var pixel in pixels)
