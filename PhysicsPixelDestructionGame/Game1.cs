@@ -21,8 +21,18 @@ namespace PhysicsPixelDestructionGame
         private Texture2D playerTexture;
         private SpriteFont font;
         private Player player;
+        public enum ProjectileType
+        {
+            C4,
+            TNT,
+            Gunpowder,
+            Nuclear,
+            Firework,
+            HolyHandGrenade
+        }
         private Pixel[,] pixArray;
         private List<Pixel> pixels = new List<Pixel>();
+        private Projectile bomb;
         private string debugString = "";
 
         public Game1()
@@ -51,6 +61,7 @@ namespace PhysicsPixelDestructionGame
             whitePixel = Content.Load<Texture2D>("whitePixel");
             playerTexture = Content.Load<Texture2D>("playerSheet");
             player = new Player(playerTexture);
+            //bomb = new Projectile(ProjectileType.C4);
             font = Content.Load<SpriteFont>("font");
             GenerateTerrain(0);
             // TODO: use this.Content to load your game content here
@@ -174,6 +185,7 @@ namespace PhysicsPixelDestructionGame
                     {
                         pixel.Draw(_spriteBatch, gameTime);
                     }
+
                     player.Draw(_spriteBatch, gameTime);
                     _spriteBatch.DrawString(font, debugString, new Vector2(200, 200), Color.Black);
                     break;

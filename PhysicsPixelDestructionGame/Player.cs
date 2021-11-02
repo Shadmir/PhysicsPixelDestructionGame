@@ -23,6 +23,7 @@ namespace PhysicsPixelDestructionGame
         public int height = 25;
         public long framesAlive = 0L;
         public long lastFrameJumped = 0L;
+        public int jumpStrength = 10;
         public int health = 100;
         public Player(Texture2D texture)
         {
@@ -54,7 +55,7 @@ namespace PhysicsPixelDestructionGame
                 if (framesAlive - lastFrameJumped > 25)
                 {
                     lastFrameJumped = framesAlive;
-                    velocity.Y = -20;
+                    velocity.Y -= jumpStrength;
                 }
             }
             if (keyState.IsKeyDown(Keys.S))
@@ -69,15 +70,21 @@ namespace PhysicsPixelDestructionGame
             {
                 velocity.X = 0;
             }
+            if (keyState.IsKeyDown(Keys.R))
+            {
+                position = new Vector2(0, 0);
+                velocity = new Vector2(0, 0);
+            }
             velocity.Y += 1;
+
 
             if (velocity.Y >= 10)
             {
-                velocity.Y = 9;
+                //velocity.Y = 9;
             }
             if (velocity.Y <= -10)
             {
-                velocity.Y = -9;
+                //velocity.Y = -9;
             }
 
             playerFuturePos = new Rectangle((int)(position.X + velocity.X), (int)(position.Y + velocity.Y), width, height);

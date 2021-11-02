@@ -16,8 +16,8 @@ namespace PhysicsPixelDestructionGame
         public Color colour;
         public int pixelID;
         Random r = new Random();
-        public int Width = 9;
-        public int Height = 9;
+        public int Width = 10;
+        public int Height = 10;
 
 
         public Pixel(Texture2D texture, Vector2 position, int id)
@@ -38,7 +38,7 @@ namespace PhysicsPixelDestructionGame
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            pixelWithTint.Draw(spriteBatch, Position, new Vector2(Width+1, Height+1), colour);
+            pixelWithTint.Draw(spriteBatch, Position, new Vector2(Width, Height), colour);
         }
 
         public void Update(GameTime gameTime)
