@@ -11,6 +11,7 @@ namespace PhysicsPixelDestructionGame
     {
         public Sprite projectile;
         public Vector2 position;
+        public bool colliding = false;
         public Vector2 velocity;
         public List<Pixel> pixels;
         public Sprite sprite;
@@ -29,9 +30,30 @@ namespace PhysicsPixelDestructionGame
             pixels = Pix;
             height *= (mass / 10);
             width *= (mass / 10);
+            switch (projectileType) {
+                case ProjectileType.C4:
+
+                    break;
+                case ProjectileType.Firework:
+
+                    break;
+                case ProjectileType.Gunpowder:
+
+                    break;
+                case ProjectileType.HolyHandGrenade:
+
+                    break;
+                case ProjectileType.Nuclear:
+
+                    break;
+                case ProjectileType.TNT:
+
+                    break;
+            }
         }
         public void Update(GameTime gameTime)
         {
+            colliding = false;
             position += velocity;
             velocity.Y -= 1;
             Rectangle projectileFuturePos = new Rectangle((int)(position.X + velocity.X), (int)(position.Y + velocity.Y), width, height);
@@ -46,16 +68,31 @@ namespace PhysicsPixelDestructionGame
                 if (projectileFuturePos.Intersects(pixelPos))
                 {
                     //need to find the angle at which i strike the pixel. then lose something like 85% of E_k and bounce depending on
-                    collisionAngle = (float)Math.Acos(Vector2.Dot(velocity, new Vector2(1, 0)) / Math.Sqrt((Math.Pow(velocity.X,2) + Math.Pow(velocity.Y, 2))));
+                    Vector2 normalisedVel = velocity;
+                    normalisedVel.Normalize();
+                    collisionAngle = (float)Math.Acos(Vector2.Dot(normalisedVel, new Vector2(1, 0)) / Math.Sqrt((Math.Pow(normalisedVel.X,2) + Math.Pow(normalisedVel.Y, 2))));
+                    colliding = true;
                 }
-
                 //speculative contact ^
+            }
+            if (colliding)
+            {
+                if ((collisionAngle > 315 || collisionAngle < 45) || (135 < collisionAngle && collisionAngle < 225))
+                {
+                    velocity.X = -0.8f * velocity.X;
+                    velocity.Y = 0.8f * velocity.Y;
+                }
+                if ((45 < collisionAngle && collisionAngle < 135) || (225 < collisionAngle && collisionAngle < 315))
+                {
+                    velocity.Y = -0.8f * velocity.Y;
+                    velocity.X = 0.8f * velocity.X;
+                }
             }
         }
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-
+              
         }
         public void Explode()
         {
