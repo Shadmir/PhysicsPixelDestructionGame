@@ -13,7 +13,6 @@ namespace PhysicsPixelDestructionGame
         private SpriteBatch _spriteBatch;
         private Rectangle window;
         private const float gravity = 16.35f; //real life g at 60fps assuming 100px = 1m
-        private string gameState = "test";
         private int pixelsMade = 0;
         private MouseState mouseState = new MouseState();
         private Vector2 mousePosVect;
@@ -30,6 +29,12 @@ namespace PhysicsPixelDestructionGame
             Firework,
             HolyHandGrenade
         }
+        private enum GameState
+        {
+            TerrainCreator,
+            Test
+        }
+        private GameState gameState = GameState.Test;
         private Pixel[,] pixArray;
         private List<Pixel> pixels = new List<Pixel>();
         private Projectile bomb;
@@ -109,7 +114,7 @@ namespace PhysicsPixelDestructionGame
             debugString = player.position.X.ToString() + "," + player.position.Y.ToString() + "," + player.velocity.Y.ToString();
             switch (gameState)
             {
-                case "terraincreator":
+                case GameState.TerrainCreator:
 
                     if (pixels.Count != 0)
                     {
@@ -153,7 +158,7 @@ namespace PhysicsPixelDestructionGame
 
                     player.Update(gameTime, pixels, pixArray);
                     break;
-                case "test":
+                case GameState.Test:
 
                     if (pixels.Count != 0)
                     {
@@ -180,7 +185,7 @@ namespace PhysicsPixelDestructionGame
             _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, null);
             switch (gameState)
             {
-                case "terraincreator":
+                case GameState.TerrainCreator:
                     foreach (Pixel pixel in pixels)
                     {
                         pixel.Draw(_spriteBatch, gameTime);
@@ -189,7 +194,7 @@ namespace PhysicsPixelDestructionGame
                     player.Draw(_spriteBatch, gameTime);
                     _spriteBatch.DrawString(font, debugString, new Vector2(200, 200), Color.Black);
                     break;
-                case "test":
+                case GameState.Test:
                     foreach (Pixel pixel in pixels)
                     {
                         pixel.Draw(_spriteBatch, gameTime);
