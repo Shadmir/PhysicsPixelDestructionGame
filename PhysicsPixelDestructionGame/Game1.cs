@@ -20,6 +20,7 @@ namespace PhysicsPixelDestructionGame
         private Texture2D playerTexture;
         private SpriteFont font;
         private Player player;
+        private Texture2D bombs;
         public enum ProjectileType
         {
             C4,
@@ -68,6 +69,7 @@ namespace PhysicsPixelDestructionGame
             player = new Player(playerTexture);
             //bomb = new Projectile(ProjectileType.C4);
             font = Content.Load<SpriteFont>("font");
+            bombs = Content.Load<Texture2D>("bombSheet");
             GenerateTerrain(0);
             // TODO: use this.Content to load your game content here
             //need to generate terrain here??? or perhaps change method call for generating terrain to link to start menu button
