@@ -6,9 +6,6 @@ using System.Collections.Generic;
 
 namespace PhysicsPixelDestructionGame
 {
-    //TODO: create algorithm to search map given position of player and find the nearest suitable open space. Perhaps make player 1x1 in terms of
-    //size and just cramp up their sprite if surrounded by pixels?
-
     //size of player spritesheet is 10x40
     class Player
     {
@@ -92,9 +89,9 @@ namespace PhysicsPixelDestructionGame
             velocity.Y += 1;
             if(keyState.IsKeyDown(Keys.F) && framesAlive - lastProjLaunch > 25)
             {
-                color = Color.Green;
+                
                 lastProjLaunch = framesAlive;
-                bombs.Add(new Projectile(ProjectileType.C4, 1, position, new Vector2(20, -20), pixels, bombSheet));
+                bombs.Add(new Projectile(ProjectileType.TNT, 1, position, new Vector2(5, -5), pixels, bombSheet));
             }
 
             if (velocity.Y >= 10)

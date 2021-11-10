@@ -23,6 +23,7 @@ namespace PhysicsPixelDestructionGame
         private bool collidingR = false;
         private bool collidingT = false;
         private bool collidingB = false;
+        private bool colliding = false;
 
         public Projectile(ProjectileType type, int Mass, Vector2 Pos, Vector2 Vel, List<Pixel> Pix, Texture2D sheet) {
             projectileType = type;
@@ -30,38 +31,39 @@ namespace PhysicsPixelDestructionGame
             position = Pos;
             velocity = Vel;
             pixels = Pix;
-            height *= (mass / 10);
-            width *= (mass / 10);
+            //height *= (mass / 10);
+            //width *= (mass / 10);
             projectile = new Sprite(sheet);
             switch (projectileType) {
                 case ProjectileType.C4:
                     spritebounds = new Rectangle(0, 0, 15, 15);
                     break;
                 case ProjectileType.Firework:
-                    spritebounds = new Rectangle(61, 0, 15, 15);
+                    spritebounds = new Rectangle(60, 0, 15, 15);
                     break;
                 case ProjectileType.Gunpowder:
-                    spritebounds = new Rectangle(31, 0, 15, 15);
+                    spritebounds = new Rectangle(30, 0, 15, 15);
                     break;
                 case ProjectileType.HolyHandGrenade:
-                    spritebounds = new Rectangle(76, 0, 15, 15);
+                    spritebounds = new Rectangle(75, 0, 15, 15);
                     break;
                 case ProjectileType.Nuclear:
-                    spritebounds = new Rectangle(46, 0, 15, 15);
+                    spritebounds = new Rectangle(45, 0, 15, 15);
                     break;
                 case ProjectileType.TNT:
-                    spritebounds = new Rectangle(16, 0, 15, 15);
+                    spritebounds = new Rectangle(15, 0, 15, 15);
                     break;
             }
         }
-        public new void Update(GameTime gameTime)
+        public void Update(GameTime gameTime)
         {
             collidingL = false;
             collidingR = false;
             collidingT = false;
             collidingB = false;
+            colliding = false;
             position += velocity;
-            velocity.Y -= 1;
+            velocity.Y += 1;
             Rectangle projectileFuturePos = new Rectangle((int)(position.X + velocity.X), (int)(position.Y + velocity.Y), width, height);
             foreach (Pixel pixel in pixels)
             {
@@ -69,11 +71,11 @@ namespace PhysicsPixelDestructionGame
                 Rectangle projectilePos = new Rectangle((int)position.X, (int)position.Y, width, height);
                 if (projectilePos.Intersects(pixelPos))
                 {
-
+                    position.Y -= 10;
                 }
                 if (projectileFuturePos.Intersects(pixelPos))
                 {
-                    //need to find the angle at which i strike the pixel. then lose something like 85% of E_k and bounce depending on
+                    /*colliding = true;
                     Rectangle pixLeft = new Rectangle(pixelPos.Left, pixelPos.Top, 1, pixel.Height);
                     Rectangle pixTop = new Rectangle(pixelPos.Left, pixelPos.Top, pixel.Width, 1);
                     Rectangle pixRight = new Rectangle(pixelPos.Right, pixelPos.Top, 1, pixel.Height);
@@ -126,7 +128,8 @@ namespace PhysicsPixelDestructionGame
                                 }
                             }
                         }
-                    }
+                    }*/
+                    velocity = new Vector2(0, 0);
                 }
                 //speculative contact ^
             }
@@ -139,6 +142,14 @@ namespace PhysicsPixelDestructionGame
             {
                 velocity.X = -0.8f * velocity.X;
                 velocity.Y = 0.8f * velocity.Y;
+            }
+            if (colliding && Math.Abs(velocity.X) < 3)
+            {
+                velocity.X = 0;
+            }
+            if (colliding && Math.Abs(velocity.Y) < 3)
+            {
+                velocity.Y = 0;
             }
         }
 
