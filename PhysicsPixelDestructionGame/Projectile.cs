@@ -7,25 +7,24 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace PhysicsPixelDestructionGame
 {
-    class Projectile : Game1
+    class Projectile
     {
         public Sprite projectile;
         public Vector2 position;
         public Vector2 velocity;
+        public Rectangle spritebounds;
         public List<Pixel> pixels;
-        public Sprite sprite;
-        public float collisionAngle;
         public ProjectileType projectileType;
         public int width = 15;
         public int height = 15;
-        public readonly Dictionary<ProjectileType, float> TntEquiv = new Dictionary<ProjectileType, float> {{ ProjectileType.TNT, 1 }, { ProjectileType.C4, 30.6f }, { ProjectileType.Gunpowder, 0.7f }, { ProjectileType.Nuclear, 490245.5f }, { ProjectileType.Firework, 1.5f }, { ProjectileType.HolyHandGrenade, 50f }};
+        //public readonly Dictionary<ProjectileType, float> TntEquiv = new Dictionary<ProjectileType, float> {{ ProjectileType.TNT, 1 }, { ProjectileType.C4, 30.6f }, { ProjectileType.Gunpowder, 0.7f }, { ProjectileType.Nuclear, 490245.5f }, { ProjectileType.Firework, 1.5f }, { ProjectileType.HolyHandGrenade, 50f }};
         public int mass;
         private bool collidingL = false;
         private bool collidingR = false;
         private bool collidingT = false;
         private bool collidingB = false;
 
-        public Projectile(ProjectileType type, int Mass, Vector2 Pos, Vector2 Vel, List<Pixel> Pix) {
+        public Projectile(ProjectileType type, int Mass, Vector2 Pos, Vector2 Vel, List<Pixel> Pix, Texture2D sheet) {
             projectileType = type;
             mass = Mass;
             position = Pos;
@@ -33,28 +32,29 @@ namespace PhysicsPixelDestructionGame
             pixels = Pix;
             height *= (mass / 10);
             width *= (mass / 10);
+            projectile = new Sprite(sheet);
             switch (projectileType) {
                 case ProjectileType.C4:
-
+                    spritebounds = new Rectangle(0, 0, 15, 15);
                     break;
                 case ProjectileType.Firework:
-
+                    spritebounds = new Rectangle(61, 0, 15, 15);
                     break;
                 case ProjectileType.Gunpowder:
-
+                    spritebounds = new Rectangle(31, 0, 15, 15);
                     break;
                 case ProjectileType.HolyHandGrenade:
-
+                    spritebounds = new Rectangle(76, 0, 15, 15);
                     break;
                 case ProjectileType.Nuclear:
-
+                    spritebounds = new Rectangle(46, 0, 15, 15);
                     break;
                 case ProjectileType.TNT:
-
+                    spritebounds = new Rectangle(16, 0, 15, 15);
                     break;
             }
         }
-        public void Update(GameTime gameTime)
+        public new void Update(GameTime gameTime)
         {
             collidingL = false;
             collidingR = false;
@@ -144,11 +144,11 @@ namespace PhysicsPixelDestructionGame
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-              
+            projectile.Draw(spriteBatch, spritebounds, new Rectangle((int)position.X, (int)position.Y, width, height), Color.White);
         }
         public void Explode()
         {
-            this.Dispose();
+            
         }
     }
 }

@@ -7,6 +7,15 @@ using System.IO;
 
 namespace PhysicsPixelDestructionGame
 {
+    public enum ProjectileType
+    {
+        C4,
+        TNT,
+        Gunpowder,
+        Nuclear,
+        Firework,
+        HolyHandGrenade
+    }
     public class Game1 : Game
     {
         private GraphicsDeviceManager _graphics;
@@ -20,16 +29,7 @@ namespace PhysicsPixelDestructionGame
         private Texture2D playerTexture;
         private SpriteFont font;
         private Player player;
-        private Texture2D bombs;
-        public enum ProjectileType
-        {
-            C4,
-            TNT,
-            Gunpowder,
-            Nuclear,
-            Firework,
-            HolyHandGrenade
-        }
+        public Texture2D bombs;
         private enum GameState
         {
             TerrainCreator,
@@ -38,7 +38,6 @@ namespace PhysicsPixelDestructionGame
         private GameState gameState = GameState.Test;
         private Pixel[,] pixArray;
         private List<Pixel> pixels = new List<Pixel>();
-        private Projectile bomb;
         private string debugString = "";
 
         public Game1()
@@ -64,12 +63,12 @@ namespace PhysicsPixelDestructionGame
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+            bombs = Content.Load<Texture2D>("bombSprites");
             whitePixel = Content.Load<Texture2D>("whitePixel");
             playerTexture = Content.Load<Texture2D>("playerSheet");
-            player = new Player(playerTexture);
+            player = new Player(playerTexture, bombs);
             //bomb = new Projectile(ProjectileType.C4);
             font = Content.Load<SpriteFont>("font");
-            bombs = Content.Load<Texture2D>("bombSheet");
             GenerateTerrain(0);
             // TODO: use this.Content to load your game content here
             //need to generate terrain here??? or perhaps change method call for generating terrain to link to start menu button

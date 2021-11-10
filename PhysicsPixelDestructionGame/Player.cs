@@ -14,9 +14,13 @@ namespace PhysicsPixelDestructionGame
     {
         private KeyboardState keyState;
         private KeyboardState lastState;
+        private long lastProjLaunch = 0L;
+        public MouseState mouse;
         public Vector2 position;
+        public List<Projectile> bombs = new List<Projectile>();
         public Vector2 velocity;
         public Sprite playerPicture;
+        public Texture2D bombSheet;
         public Rectangle playerFuturePos;
         public Rectangle spriteRectangle = new Rectangle(0, 0, 20, 10);
         public int width = 50;
@@ -25,21 +29,31 @@ namespace PhysicsPixelDestructionGame
         public long lastFrameJumped = 0L;
         public int jumpStrength = 10;
         public int health = 100;
-        public Player(Texture2D texture)
+        public Color color = Color.White;
+        public Player(Texture2D texture, Texture2D bombs)
         {
             playerPicture = new Sprite(texture);
             position = new Vector2(0, 0);
             velocity = new Vector2(0, 0);
+            bombSheet = bombs;
         }
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            playerPicture.Draw(spriteBatch, spriteRectangle, new Rectangle((int)position.X, (int)position.Y, width, height), Color.White);
+            playerPicture.Draw(spriteBatch, spriteRectangle, new Rectangle((int)position.X, (int)position.Y, width, height), color);
+            if (bombs.Count > 0)
+            {
+                foreach (var bomb in bombs)
+                {
+                    bomb.Draw(spriteBatch, gameTime);
+                }
+            }
         }
         public void Update(GameTime gameTime, List<Pixel> pixels, Pixel[,] map)
         {
             framesAlive++;
             keyState = Keyboard.GetState();
+            mouse = Mouse.GetState();
             if (keyState.IsKeyDown(Keys.D))
             {
                 velocity.X = 5;
@@ -76,7 +90,12 @@ namespace PhysicsPixelDestructionGame
                 velocity = new Vector2(0, 0);
             }
             velocity.Y += 1;
-
+            if(keyState.IsKeyDown(Keys.F) && framesAlive - lastProjLaunch > 25)
+            {
+                color = Color.Green;
+                lastProjLaunch = framesAlive;
+                bombs.Add(new Projectile(ProjectileType.C4, 1, position, new Vector2(20, -20), pixels, bombSheet));
+            }
 
             if (velocity.Y >= 10)
             {
@@ -107,7 +126,13 @@ namespace PhysicsPixelDestructionGame
 
                 //speculative contact ^
             }
-
+            if (bombs.Count > 0)
+            {
+                foreach (Projectile bomb in bombs)
+                {
+                    bomb.Update(gameTime);
+                }
+            }
             position += velocity;
             lastState = keyState;
         }
