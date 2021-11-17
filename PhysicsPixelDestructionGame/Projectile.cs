@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -17,7 +18,7 @@ namespace PhysicsPixelDestructionGame
         public ProjectileType projectileType;
         public int width = 15;
         public int height = 15;
-        //public readonly Dictionary<ProjectileType, float> TntEquiv = new Dictionary<ProjectileType, float> {{ ProjectileType.TNT, 1 }, { ProjectileType.C4, 30.6f }, { ProjectileType.Gunpowder, 0.7f }, { ProjectileType.Nuclear, 490245.5f }, { ProjectileType.Firework, 1.5f }, { ProjectileType.HolyHandGrenade, 50f }};
+        public readonly Dictionary<ProjectileType, float> TntEquiv = new Dictionary<ProjectileType, float> {{ ProjectileType.TNT, 1 }, { ProjectileType.C4, 30.6f }, { ProjectileType.Gunpowder, 0.7f }, { ProjectileType.Nuclear, 490245.5f }, { ProjectileType.Firework, 1.5f }, { ProjectileType.HolyHandGrenade, 50f }};
         public int mass;
         private bool collidingL = false;
         private bool collidingR = false;
@@ -25,11 +26,20 @@ namespace PhysicsPixelDestructionGame
         private bool collidingB = false;
         private bool colliding = false;
 
-        public Projectile(ProjectileType type, int Mass, Vector2 Pos, Vector2 Vel, List<Pixel> Pix, Texture2D sheet) {
+        public Projectile(ProjectileType type, int Mass, Vector2 Pos, Vector2 Vel, List<Pixel> Pix, Texture2D sheet, Direction initDir) {
             projectileType = type;
             mass = Mass;
             position = Pos;
             velocity = Vel;
+            switch (initDir)
+            {
+                case Direction.Right:
+                    velocity += new Vector2(5, -5);
+                    break;
+                case Direction.Left:
+                    velocity += new Vector2(-5, -5);
+                    break;
+            }
             pixels = Pix;
             //height *= (mass / 10);
             //width *= (mass / 10);
@@ -159,7 +169,7 @@ namespace PhysicsPixelDestructionGame
         }
         public void Explode()
         {
-            
+
         }
     }
 }

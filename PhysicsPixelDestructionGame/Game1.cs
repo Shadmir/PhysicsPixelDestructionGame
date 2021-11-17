@@ -16,6 +16,13 @@ namespace PhysicsPixelDestructionGame
         Firework,
         HolyHandGrenade
     }
+    public enum Direction
+    {
+        Up,
+        Down,
+        Left,
+        Right
+    }
     public class Game1 : Game
     {
         private GraphicsDeviceManager _graphics;
@@ -67,7 +74,6 @@ namespace PhysicsPixelDestructionGame
             whitePixel = Content.Load<Texture2D>("whitePixel");
             playerTexture = Content.Load<Texture2D>("playerSheet");
             player = new Player(playerTexture, bombs);
-            //bomb = new Projectile(ProjectileType.C4);
             font = Content.Load<SpriteFont>("font");
             GenerateTerrain(0);
             // TODO: use this.Content to load your game content here
@@ -184,6 +190,7 @@ namespace PhysicsPixelDestructionGame
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, null);
+            _spriteBatch.DrawString(font, "\"WASD\" to move, \"R\" to reset, \"F\" to fire.", new Vector2(600, 500), Color.White);
             switch (gameState)
             {
                 case GameState.TerrainCreator:
@@ -194,6 +201,7 @@ namespace PhysicsPixelDestructionGame
 
                     player.Draw(_spriteBatch, gameTime);
                     _spriteBatch.DrawString(font, debugString, new Vector2(200, 200), Color.Black);
+                   
                     break;
                 case GameState.Test:
                     foreach (Pixel pixel in pixels)

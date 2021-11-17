@@ -9,6 +9,7 @@ namespace PhysicsPixelDestructionGame
     //size of player spritesheet is 10x40
     class Player
     {
+        private Direction facing = Direction.Right;
         private KeyboardState keyState;
         private KeyboardState lastState;
         private long lastProjLaunch = 0L;
@@ -53,11 +54,13 @@ namespace PhysicsPixelDestructionGame
             mouse = Mouse.GetState();
             if (keyState.IsKeyDown(Keys.D))
             {
+                facing = Direction.Right;
                 velocity.X = 5;
                 spriteRectangle = new Rectangle(20, 0, 20, 10);
             }
             if (keyState.IsKeyDown(Keys.A))
             {
+                facing = Direction.Left;
                 velocity.X = -5;
                 spriteRectangle = new Rectangle(0, 0, 20, 10);
             }
@@ -89,9 +92,8 @@ namespace PhysicsPixelDestructionGame
             velocity.Y += 1;
             if(keyState.IsKeyDown(Keys.F) && framesAlive - lastProjLaunch > 25)
             {
-                
                 lastProjLaunch = framesAlive;
-                bombs.Add(new Projectile(ProjectileType.TNT, 1, position, new Vector2(5, -5), pixels, bombSheet));
+                bombs.Add(new Projectile(ProjectileType.TNT, 1, position, velocity, pixels, bombSheet, facing)) ;
             }
 
             if (velocity.Y >= 10)
