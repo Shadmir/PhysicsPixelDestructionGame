@@ -20,11 +20,7 @@ namespace PhysicsPixelDestructionGame
         public int height = 15;
         public readonly Dictionary<ProjectileType, float> TntEquiv = new Dictionary<ProjectileType, float> {{ ProjectileType.TNT, 1 }, { ProjectileType.C4, 30.6f }, { ProjectileType.Gunpowder, 0.7f }, { ProjectileType.Nuclear, 490245.5f }, { ProjectileType.Firework, 1.5f }, { ProjectileType.HolyHandGrenade, 50f }};
         public int mass;
-        private bool collidingL = false;
-        private bool collidingR = false;
-        private bool collidingT = false;
-        private bool collidingB = false;
-        private bool colliding = false;
+        private bool collidingL = false, collidingR = false, collidingT = false, collidingB = false, colliding = false;
 
         public Projectile(ProjectileType type, int Mass, Vector2 Pos, Vector2 Vel, List<Pixel> Pix, Texture2D sheet, Direction initDir) {
             projectileType = type;
@@ -85,7 +81,7 @@ namespace PhysicsPixelDestructionGame
                 }
                 if (projectileFuturePos.Intersects(pixelPos))
                 {
-                    /*colliding = true;
+                    colliding = true;
                     Rectangle pixLeft = new Rectangle(pixelPos.Left, pixelPos.Top, 1, pixel.Height);
                     Rectangle pixTop = new Rectangle(pixelPos.Left, pixelPos.Top, pixel.Width, 1);
                     Rectangle pixRight = new Rectangle(pixelPos.Right, pixelPos.Top, 1, pixel.Height);
@@ -138,8 +134,8 @@ namespace PhysicsPixelDestructionGame
                                 }
                             }
                         }
-                    }*/
-                    velocity = new Vector2(0, 0);
+                    }
+                    //velocity = new Vector2(0, 0);
                 }
                 //speculative contact ^
             }
