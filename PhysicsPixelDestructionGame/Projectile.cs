@@ -135,7 +135,7 @@ namespace PhysicsPixelDestructionGame
                             }
                         }
                     }
-                    //velocity = new Vector2(0, 0);
+                    velocity = new Vector2(0, 0);
                 }
                 //speculative contact ^
             }

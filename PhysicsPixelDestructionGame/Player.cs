@@ -66,11 +66,11 @@ namespace PhysicsPixelDestructionGame
             }
             if (keyState.IsKeyDown(Keys.W))
             {
-                if (framesAlive - lastFrameJumped > 25)
-                {
+                //if (framesAlive - lastFrameJumped > 25)
+                //{
                     lastFrameJumped = framesAlive;
                     velocity.Y -= jumpStrength;
-                }
+                //}
             }
             if (keyState.IsKeyDown(Keys.S))
             {
