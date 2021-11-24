@@ -15,6 +15,7 @@ namespace PhysicsPixelDestructionGame
         public Vector2 velocity;
         public Rectangle spritebounds;
         public List<Pixel> pixels;
+        public List<Player> players;
         public ProjectileType projectileType;
         public int width = 15;
         public int height = 15;

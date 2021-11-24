@@ -7,6 +7,18 @@ using System.IO;
 
 namespace PhysicsPixelDestructionGame
 {
+    //TODO: 
+    //- Make Explosions
+    //-- Add Players to a list
+    //-- Pass list to Projectile Class
+    //-- Allow locally edited list in projectile class to edit the global list of stuff
+    //--- MAY BE DOABLE WITH A STATIC CLASS
+    //- add menu and playing gamestate
+    //-- menu art and buttons and stuff
+    //- add logic to check if pixels are close to the edge?????? What does this mean and why did i add this to my todo list 
+    //- Documented design
+    //- Finish analysis properly
+    //- Turn-based gameplay
     public enum ProjectileType
     {
         C4,
@@ -98,7 +110,6 @@ namespace PhysicsPixelDestructionGame
                         debugString = pixDefSplit[pixDefSplit.Length - 1];
                         pixels.Add(new Pixel(whitePixel, new Vector2(float.Parse(pixDefSplit[0]), float.Parse(pixDefSplit[1])), int.Parse(pixDefSplit[2])));
                         pixelsMade++;
-
                     }
                 }
             } catch (Exception e)
@@ -214,8 +225,7 @@ namespace PhysicsPixelDestructionGame
 
             }
             _spriteBatch.End();
-            //TODO add menu and playing gamestate
-            //TODO add logic to check if pixels are close to the edge
+
             base.Draw(gameTime);
         }
     }
