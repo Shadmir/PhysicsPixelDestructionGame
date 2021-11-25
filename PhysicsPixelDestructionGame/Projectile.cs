@@ -31,10 +31,10 @@ namespace PhysicsPixelDestructionGame
             switch (initDir)
             {
                 case Direction.Right:
-                    velocity += new Vector2(5, -5);
+                    velocity += new Vector2(10, -10);
                     break;
                 case Direction.Left:
-                    velocity += new Vector2(-5, -5);
+                    velocity += new Vector2(-10, -10);
                     break;
             }
             pixels = Pix;

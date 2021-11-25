@@ -12,7 +12,7 @@ namespace PhysicsPixelDestructionGame
     //-- Add Players to a list
     //-- Pass list to Projectile Class
     //-- Allow locally edited list in projectile class to edit the global list of stuff
-    //--- MAY BE DOABLE WITH A STATIC CLASS
+    //--- pixels = player.pixels; or similar
     //- add menu and playing gamestate
     //-- menu art and buttons and stuff
     //- add logic to check if pixels are close to the edge?????? What does this mean and why did i add this to my todo list 
@@ -47,7 +47,9 @@ namespace PhysicsPixelDestructionGame
         private Texture2D whitePixel;
         private Texture2D playerTexture;
         private SpriteFont font;
-        private Player player;
+        private List<Player> players = new List<Player>();
+        private Player player1;
+        private Player player2;
         public Texture2D bombs;
         private enum GameState
         {
@@ -85,7 +87,10 @@ namespace PhysicsPixelDestructionGame
             bombs = Content.Load<Texture2D>("bombSprites");
             whitePixel = Content.Load<Texture2D>("whitePixel");
             playerTexture = Content.Load<Texture2D>("playerSheet");
-            player = new Player(playerTexture, bombs);
+            player1 = new Player(playerTexture, bombs);
+            player2 = new Player(playerTexture, bombs);
+            players.Add(player1);
+            players.Add(player2);
             font = Content.Load<SpriteFont>("font");
             GenerateTerrain(0);
             // TODO: use this.Content to load your game content here
@@ -129,7 +134,7 @@ namespace PhysicsPixelDestructionGame
             mouseState = Mouse.GetState();
             mousePosVect = new Vector2(mouseState.X, mouseState.Y);
             bool colliding = false;
-            debugString = player.position.X.ToString() + "," + player.position.Y.ToString() + "," + player.velocity.Y.ToString();
+            debugString = players[0].position.X.ToString() + "," + players[0].position.Y.ToString() + "," + players[0].velocity.Y.ToString();
             switch (gameState)
             {
                 case GameState.TerrainCreator:
@@ -174,7 +179,7 @@ namespace PhysicsPixelDestructionGame
                     }
 
 
-                    player.Update(gameTime, pixels, pixArray);
+                    players[0].Update(gameTime, pixels, pixArray);
                     break;
                 case GameState.Test:
 
@@ -185,14 +190,16 @@ namespace PhysicsPixelDestructionGame
                             pixArray[(int)(pixel.Position.Y / 10), (int)(pixel.Position.X / 10)] = pixel;
                         }
                     }
-                    player.Update(gameTime, pixels, pixArray);
+                    players[0].Update(gameTime, pixels, pixArray);
+                     
                     break;
 
                 default:
                     break;
             }
             // TODO: Add your update logic here
-
+            
+            
             base.Update(gameTime);
         }
 
@@ -210,7 +217,7 @@ namespace PhysicsPixelDestructionGame
                         pixel.Draw(_spriteBatch, gameTime);
                     }
 
-                    player.Draw(_spriteBatch, gameTime);
+                    players[0].Draw(_spriteBatch, gameTime);
                     _spriteBatch.DrawString(font, debugString, new Vector2(200, 200), Color.Black);
                    
                     break;
@@ -219,7 +226,7 @@ namespace PhysicsPixelDestructionGame
                     {
                         pixel.Draw(_spriteBatch, gameTime);
                     }
-                    player.Draw(_spriteBatch, gameTime);
+                    players[0].Draw(_spriteBatch, gameTime);
                     _spriteBatch.DrawString(font, debugString, new Vector2(200, 200), Color.Black);
                     break;
 
