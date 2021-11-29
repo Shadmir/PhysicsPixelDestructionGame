@@ -14,8 +14,6 @@ namespace PhysicsPixelDestructionGame
         public Vector2 position;
         public Vector2 velocity;
         public Rectangle spritebounds;
-        public List<Pixel> pixels;
-        public List<Player> players;
         public ProjectileType projectileType;
         public int width = 15;
         public int height = 15;
@@ -23,7 +21,7 @@ namespace PhysicsPixelDestructionGame
         public int mass;
         private bool collidingL = false, collidingR = false, collidingT = false, collidingB = false, colliding = false;
 
-        public Projectile(ProjectileType type, int Mass, Vector2 Pos, Vector2 Vel, List<Pixel> Pix, Texture2D sheet, Direction initDir) {
+        public Projectile(ProjectileType type, int Mass, Vector2 Pos, Vector2 Vel, Texture2D sheet, Direction initDir) {
             projectileType = type;
             mass = Mass;
             position = Pos;
@@ -37,10 +35,8 @@ namespace PhysicsPixelDestructionGame
                     velocity += new Vector2(-10, -10);
                     break;
             }
-            pixels = Pix;
             //height *= (mass / 10);
             //width *= (mass / 10);
-            projectile = new Sprite(sheet);
             switch (projectileType) {
                 case ProjectileType.C4:
                     spritebounds = new Rectangle(0, 0, 15, 15);
@@ -72,7 +68,7 @@ namespace PhysicsPixelDestructionGame
             position += velocity;
             velocity.Y += 1;
             Rectangle projectileFuturePos = new Rectangle((int)(position.X + velocity.X), (int)(position.Y + velocity.Y), width, height);
-            foreach (Pixel pixel in pixels)
+            foreach (Pixel pixel in PhysicsObjects.pixels)
             {
                 Rectangle pixelPos = new Rectangle((int)pixel.Position.X, (int)pixel.Position.Y, pixel.Width, pixel.Height);
                 Rectangle projectilePos = new Rectangle((int)position.X, (int)position.Y, width, height);

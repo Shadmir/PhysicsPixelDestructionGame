@@ -47,7 +47,7 @@ namespace PhysicsPixelDestructionGame
                 }
             }
         }
-        public void Update(GameTime gameTime, List<Pixel> pixels, Pixel[,] map)
+        public void Update(GameTime gameTime)
         {
             framesAlive++;
             keyState = Keyboard.GetState();
@@ -93,7 +93,7 @@ namespace PhysicsPixelDestructionGame
             if(keyState.IsKeyDown(Keys.F) && framesAlive - lastProjLaunch > 25)
             {
                 lastProjLaunch = framesAlive;
-                bombs.Add(new Projectile(ProjectileType.TNT, 1, position, velocity, pixels, bombSheet, facing)) ;
+                PhysicsObjects.projectiles.Add(new Projectile(ProjectileType.TNT, 1, position, velocity, bombSheet, facing)) ;
             }
 
             if (velocity.Y >= 10)
@@ -106,7 +106,7 @@ namespace PhysicsPixelDestructionGame
             }
 
             playerFuturePos = new Rectangle((int)(position.X + velocity.X), (int)(position.Y + velocity.Y), width, height);
-            foreach (Pixel pixel in pixels)
+            foreach (Pixel pixel in PhysicsObjects.pixels)
             {
                 Rectangle pixelPos = new Rectangle((int)pixel.Position.X, (int)pixel.Position.Y, pixel.Width, pixel.Height);
                 Rectangle playerPos = new Rectangle((int)position.X, (int)position.Y, width, height);
@@ -127,7 +127,7 @@ namespace PhysicsPixelDestructionGame
             }
             if (bombs.Count > 0)
             {
-                foreach (Projectile bomb in bombs)
+                foreach (Projectile bomb in PhysicsObjects.projectiles)
                 {
                     bomb.Update(gameTime);
                 }

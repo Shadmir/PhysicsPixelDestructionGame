@@ -18,14 +18,12 @@ namespace PhysicsPixelDestructionGame
         Random r = new Random();
         public int Width = 10;
         public int Height = 10;
-
-
         public Pixel(Texture2D texture, Vector2 position, int id)
         {
             pixelWithTint = new Sprite(texture);
             Position = position;
             pixelID = id;
-            colour = new Color(100 + r.Next(-10, 10), 40 + r.Next(0, 10), r.Next(0, 10));
+            colour = new Color(100 + r.Next(-10, 10), 40 + r.Next(-10, 10), r.Next(-10, 10));
         }
 
         public Pixel(Sprite sprite, Vector2 position, Color color, int id)
@@ -43,7 +41,7 @@ namespace PhysicsPixelDestructionGame
 
         public void Update(GameTime gameTime)
         {  
-
+            
         }
     }
 }

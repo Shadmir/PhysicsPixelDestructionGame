@@ -8,6 +8,7 @@ using System.IO;
 namespace PhysicsPixelDestructionGame
 {
     //TODO: 
+    //using globals lol
     //- Make Explosions
     //-- Add Players to a list
     //-- Pass list to Projectile Class
@@ -15,7 +16,8 @@ namespace PhysicsPixelDestructionGame
     //--- pixels = player.pixels; or similar
     //- add menu and playing gamestate
     //-- menu art and buttons and stuff
-    //- add logic to check if pixels are close to the edge?????? What does this mean and why did i add this to my todo list 
+    //- add logic to check if pixels are connected to the edge?????? What does this mean and why did i add this to my todo list 
+    //- ^^^^ checking if they want to fall
     //- Documented design
     //- Finish analysis properly
     //- Turn-based gameplay
@@ -47,7 +49,6 @@ namespace PhysicsPixelDestructionGame
         private Texture2D whitePixel;
         private Texture2D playerTexture;
         private SpriteFont font;
-        private List<Player> players = new List<Player>();
         private Player player1;
         private Player player2;
         public Texture2D bombs;
@@ -57,8 +58,6 @@ namespace PhysicsPixelDestructionGame
             Test
         }
         private GameState gameState = GameState.Test;
-        private Pixel[,] pixArray;
-        private List<Pixel> pixels = new List<Pixel>();
         private string debugString = "";
 
         public Game1()
@@ -76,7 +75,6 @@ namespace PhysicsPixelDestructionGame
             _graphics.IsFullScreen = true;
             _graphics.ApplyChanges();
             //pixArray = new Pixel[(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 10) + 1, (GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 10) + 1];
-            pixArray = new Pixel[(1080 / 10) + 1, (1920 / 10) + 1];
             window = GraphicsDevice.Viewport.Bounds;
             base.Initialize();
         }
@@ -89,8 +87,8 @@ namespace PhysicsPixelDestructionGame
             playerTexture = Content.Load<Texture2D>("playerSheet");
             player1 = new Player(playerTexture, bombs);
             player2 = new Player(playerTexture, bombs);
-            players.Add(player1);
-            players.Add(player2);
+            PhysicsObjects.players.Add(player1);
+            PhysicsObjects.players.Add(player2);
             font = Content.Load<SpriteFont>("font");
             GenerateTerrain(0);
             // TODO: use this.Content to load your game content here
@@ -113,7 +111,7 @@ namespace PhysicsPixelDestructionGame
                     {
                         string[] pixDefSplit = inputSplit[i].Split(",");
                         debugString = pixDefSplit[pixDefSplit.Length - 1];
-                        pixels.Add(new Pixel(whitePixel, new Vector2(float.Parse(pixDefSplit[0]), float.Parse(pixDefSplit[1])), int.Parse(pixDefSplit[2])));
+                        PhysicsObjects.pixels.Add(new Pixel(whitePixel, new Vector2(float.Parse(pixDefSplit[0]), float.Parse(pixDefSplit[1])), int.Parse(pixDefSplit[2])));
                         pixelsMade++;
                     }
                 }
@@ -134,21 +132,13 @@ namespace PhysicsPixelDestructionGame
             mouseState = Mouse.GetState();
             mousePosVect = new Vector2(mouseState.X, mouseState.Y);
             bool colliding = false;
-            debugString = players[0].position.X.ToString() + "," + players[0].position.Y.ToString() + "," + players[0].velocity.Y.ToString();
+            debugString = PhysicsObjects.players[0].position.X.ToString() + "," + PhysicsObjects.players[0].position.Y.ToString() + "," + PhysicsObjects.players[0].velocity.Y.ToString();
             switch (gameState)
             {
                 case GameState.TerrainCreator:
-
-                    if (pixels.Count != 0)
-                    {
-                        foreach (var pixel in pixels)
-                        {
-                            pixArray[(int)(pixel.Position.Y / 10), (int)(pixel.Position.X / 10)] = pixel;
-                        }
-                    }
                     if (mouseState.LeftButton == ButtonState.Pressed)
                     {
-                        foreach (var pixel in pixels)
+                        foreach (var pixel in PhysicsObjects.pixels)
                         {
                             if (new Rectangle((int)mousePosVect.X, (int)mousePosVect.Y, 10, 10).Intersects(new Rectangle((int)pixel.Position.X, (int)pixel.Position.Y, 10, 10)))
                             {
@@ -161,7 +151,7 @@ namespace PhysicsPixelDestructionGame
                         }
                         if (!colliding)
                         {
-                            pixels.Add(new Pixel(whitePixel, new Vector2(mousePosVect.X - mousePosVect.X % 10, mousePosVect.Y - mousePosVect.Y % 10), pixelsMade));
+                            PhysicsObjects.pixels.Add(new Pixel(whitePixel, new Vector2(mousePosVect.X - mousePosVect.X % 10, mousePosVect.Y - mousePosVect.Y % 10), pixelsMade));
                             pixelsMade++;
                         }
                     }
@@ -170,7 +160,7 @@ namespace PhysicsPixelDestructionGame
                         using (StreamWriter sw = new StreamWriter("terrain.txt"))
                         {
                             string line = "";
-                            foreach (var pixel in pixels)
+                            foreach (var pixel in PhysicsObjects.pixels)
                             {
                                 line += "" + pixel.Position.X.ToString() + "," + pixel.Position.Y.ToString() + "," + pixel.pixelID.ToString() + ":";
                             }
@@ -179,18 +169,18 @@ namespace PhysicsPixelDestructionGame
                     }
 
 
-                    players[0].Update(gameTime, pixels, pixArray);
+                    PhysicsObjects.players[0].Update(gameTime);
                     break;
                 case GameState.Test:
 
-                    if (pixels.Count != 0)
+                    if (PhysicsObjects.pixels.Count != 0)
                     {
-                        foreach (var pixel in pixels)
+                        for (int i = 0; i < PhysicsObjects.pixels.Count; i++)
                         {
-                            pixArray[(int)(pixel.Position.Y / 10), (int)(pixel.Position.X / 10)] = pixel;
+                            PhysicsObjects.pixels[i].Update(gameTime);
                         }
                     }
-                    players[0].Update(gameTime, pixels, pixArray);
+                    PhysicsObjects.players[0].Update(gameTime);
                      
                     break;
 
@@ -212,21 +202,21 @@ namespace PhysicsPixelDestructionGame
             switch (gameState)
             {
                 case GameState.TerrainCreator:
-                    foreach (Pixel pixel in pixels)
+                    foreach (Pixel pixel in PhysicsObjects.pixels)
                     {
                         pixel.Draw(_spriteBatch, gameTime);
                     }
 
-                    players[0].Draw(_spriteBatch, gameTime);
+                    PhysicsObjects.players[0].Draw(_spriteBatch, gameTime);
                     _spriteBatch.DrawString(font, debugString, new Vector2(200, 200), Color.Black);
                    
                     break;
                 case GameState.Test:
-                    foreach (Pixel pixel in pixels)
+                    foreach (Pixel pixel in PhysicsObjects.pixels)
                     {
                         pixel.Draw(_spriteBatch, gameTime);
                     }
-                    players[0].Draw(_spriteBatch, gameTime);
+                    PhysicsObjects.players[0].Draw(_spriteBatch, gameTime);
                     _spriteBatch.DrawString(font, debugString, new Vector2(200, 200), Color.Black);
                     break;
 
