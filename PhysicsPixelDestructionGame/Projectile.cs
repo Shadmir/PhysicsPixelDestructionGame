@@ -12,6 +12,7 @@ namespace PhysicsPixelDestructionGame
     {
         public Sprite projectile;
         public Vector2 position;
+        public bool exploded = false;
         public Vector2 velocity;
         public Rectangle spritebounds;
         public ProjectileType projectileType;
@@ -23,6 +24,7 @@ namespace PhysicsPixelDestructionGame
 
         public Projectile(ProjectileType type, int Mass, Vector2 Pos, Vector2 Vel, Texture2D sheet, Direction initDir) {
             projectileType = type;
+            projectile = new Sprite(sheet);
             mass = Mass;
             position = Pos;
             velocity = Vel;
@@ -58,8 +60,9 @@ namespace PhysicsPixelDestructionGame
                     break;
             }
         }
-        public void Update(GameTime gameTime)
+        public new void Update(GameTime gameTime)
         {
+            
             collidingL = false;
             collidingR = false;
             collidingT = false;
@@ -162,7 +165,8 @@ namespace PhysicsPixelDestructionGame
         }
         public void Explode()
         {
-
+            exploded = true;
+            //explosion logic
         }
     }
 }

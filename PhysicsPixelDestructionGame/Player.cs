@@ -39,13 +39,7 @@ namespace PhysicsPixelDestructionGame
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
             playerPicture.Draw(spriteBatch, spriteRectangle, new Rectangle((int)position.X, (int)position.Y, width, height), color);
-            if (bombs.Count > 0)
-            {
-                foreach (var bomb in bombs)
-                {
-                    bomb.Draw(spriteBatch, gameTime);
-                }
-            }
+
         }
         public void Update(GameTime gameTime)
         {
@@ -124,13 +118,6 @@ namespace PhysicsPixelDestructionGame
                 }
 
                 //speculative contact ^
-            }
-            if (bombs.Count > 0)
-            {
-                foreach (Projectile bomb in PhysicsObjects.projectiles)
-                {
-                    bomb.Update(gameTime);
-                }
             }
             position += velocity;
             lastState = keyState;

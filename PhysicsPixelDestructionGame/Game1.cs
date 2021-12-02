@@ -181,6 +181,17 @@ namespace PhysicsPixelDestructionGame
                         }
                     }
                     PhysicsObjects.players[0].Update(gameTime);
+                    for (int i = 0; i < PhysicsObjects.projectiles.Count; i++)
+                    {
+                        if (PhysicsObjects.projectiles[i].exploded)
+                        {
+                            PhysicsObjects.projectiles.RemoveAt(i);
+                        }
+                        else
+                        {
+                            PhysicsObjects.projectiles[i].Update(gameTime);
+                        }
+                    }
                      
                     break;
 
@@ -217,6 +228,10 @@ namespace PhysicsPixelDestructionGame
                         pixel.Draw(_spriteBatch, gameTime);
                     }
                     PhysicsObjects.players[0].Draw(_spriteBatch, gameTime);
+                    for (int i = 0; i < PhysicsObjects.projectiles.Count; i++)
+                    {
+                        PhysicsObjects.projectiles[i].Draw(_spriteBatch, gameTime);
+                    }
                     _spriteBatch.DrawString(font, debugString, new Vector2(200, 200), Color.Black);
                     break;
 
