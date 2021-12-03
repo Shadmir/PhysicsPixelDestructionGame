@@ -8,12 +8,7 @@ using System.IO;
 namespace PhysicsPixelDestructionGame
 {
     //TODO: 
-    //using globals lol
     //- Make Explosions
-    //-- Add Players to a list
-    //-- Pass list to Projectile Class
-    //-- Allow locally edited list in projectile class to edit the global list of stuff
-    //--- pixels = player.pixels; or similar
     //- add menu and playing gamestate
     //-- menu art and buttons and stuff
     //- add logic to check if pixels are connected to the edge?????? What does this mean and why did i add this to my todo list 

@@ -60,7 +60,7 @@ namespace PhysicsPixelDestructionGame
                     break;
             }
         }
-        public new void Update(GameTime gameTime)
+        public void Update(GameTime gameTime)
         {
             
             collidingL = false;
@@ -166,7 +166,10 @@ namespace PhysicsPixelDestructionGame
         public void Explode()
         {
             exploded = true;
-            //explosion logic
+            foreach (var player in PhysicsObjects.players)
+            {
+                float distance = (player.position - position).Length();
+            }
         }
     }
 }
