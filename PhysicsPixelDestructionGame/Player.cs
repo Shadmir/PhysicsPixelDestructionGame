@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 using System.Collections.Generic;
 
 
@@ -26,7 +27,7 @@ namespace PhysicsPixelDestructionGame
         public long framesAlive = 0L;
         public long lastFrameJumped = 0L;
         public int jumpStrength = 10;
-        public int health = 100;
+        public float health = 100f;
         public Color color = Color.White;
         public Player(Texture2D texture, Texture2D bombs)
         {
@@ -40,6 +41,10 @@ namespace PhysicsPixelDestructionGame
         {
             playerPicture.Draw(spriteBatch, spriteRectangle, new Rectangle((int)position.X, (int)position.Y, width, height), color);
 
+        }
+        public void Damage(float Rg)
+        {
+            health -= 100000000f * ( (0.082f / Rg) + 0.26f / (float)Math.Pow(Rg, 2) + 0.69f / (float)Math.Pow(Rg, 3));
         }
         public void Update(GameTime gameTime)
         {
@@ -77,6 +82,16 @@ namespace PhysicsPixelDestructionGame
             if (keyState.IsKeyUp(Keys.A) && keyState.IsKeyUp(Keys.D))
             {
                 velocity.X = 0;
+            }
+            if (keyState.IsKeyDown(Keys.B))
+            {
+                if (PhysicsObjects.projectiles.Count > 0)
+                {
+                    for (int i = 0; i < PhysicsObjects.projectiles.Count; i++)
+                    {
+                        PhysicsObjects.projectiles[i].Explode();
+                    }
+                }
             }
             if (keyState.IsKeyDown(Keys.R))
             {

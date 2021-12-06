@@ -8,7 +8,7 @@ using System.IO;
 namespace PhysicsPixelDestructionGame
 {
     //TODO: 
-    //- Make Explosions
+    //- Make Explosions -> made but they don't do differing amounts of damage
     //- add menu and playing gamestate
     //-- menu art and buttons and stuff
     //- add logic to check if pixels are connected to the edge?????? What does this mean and why did i add this to my todo list 
@@ -187,7 +187,7 @@ namespace PhysicsPixelDestructionGame
                             PhysicsObjects.projectiles[i].Update(gameTime);
                         }
                     }
-                     
+                    debugString = PhysicsObjects.players[0].health.ToString();
                     break;
 
                 default:

@@ -37,8 +37,8 @@ namespace PhysicsPixelDestructionGame
                     velocity += new Vector2(-10, -10);
                     break;
             }
-            //height *= (mass / 10);
-            //width *= (mass / 10);
+            height *= (int)Math.Pow(mass, 1/2);
+            width *= (int)Math.Pow(mass, 1 / 2);
             switch (projectileType) {
                 case ProjectileType.C4:
                     spritebounds = new Rectangle(0, 0, 15, 15);
@@ -165,10 +165,14 @@ namespace PhysicsPixelDestructionGame
         }
         public void Explode()
         {
-            exploded = true;
             foreach (var player in PhysicsObjects.players)
             {
                 float distance = (player.position - position).Length();
+                float equiv = TntEquiv[projectileType];
+                float Rg = distance / (float)Math.Pow((double)equiv, (1/3));
+                Console.WriteLine(Rg);
+                player.Damage(Rg);
+                exploded = true;
             }
         }
     }
