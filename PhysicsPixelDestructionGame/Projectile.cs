@@ -165,13 +165,15 @@ namespace PhysicsPixelDestructionGame
         }
         public void Explode()
         {
-            foreach (var player in PhysicsObjects.players)
+            for (int i = 0; i < PhysicsObjects.players.Count; i++)
             {
-                float distance = (player.position - position).Length();
+                float distance = (PhysicsObjects.players[i].position - position).Length();
+                Console.WriteLine("Distance from player: " + distance);
                 float equiv = TntEquiv[projectileType];
-                float Rg = distance / (float)Math.Pow((double)equiv, (1/3));
-                Console.WriteLine(Rg);
-                player.Damage(Rg);
+                Console.WriteLine("TNT Equivalent: " + equiv);
+                float Rg = distance / (float)Math.Pow((double)equiv, (double)1.0 / 3.0);
+                Console.WriteLine("RG: " + Rg);
+                PhysicsObjects.players[i].Damage(Rg);
                 exploded = true;
             }
         }

@@ -25,6 +25,7 @@ namespace PhysicsPixelDestructionGame
         public int width = 50;
         public int height = 25;
         public long framesAlive = 0L;
+        public long lastExplosion = 0L;
         public long lastFrameJumped = 0L;
         public int jumpStrength = 10;
         public float health = 100f;
@@ -44,7 +45,16 @@ namespace PhysicsPixelDestructionGame
         }
         public void Damage(float Rg)
         {
-            health -= 100000000f * ( (0.082f / Rg) + 0.26f / (float)Math.Pow(Rg, 2) + 0.69f / (float)Math.Pow(Rg, 3));
+            if (Rg > 0.3f)
+            {
+                Console.WriteLine("Damaging player with " + ((0.082f / Rg) + 0.26f / (float)Math.Pow(Rg, 2) + 0.69f / (float)Math.Pow(Rg, 3)) + " Mega Pascal of pressure.");
+                health -= 7000f * ((0.082f / Rg) + 0.26f / (float)Math.Pow(Rg, 2) + 0.69f / (float)Math.Pow(Rg, 3));
+            }
+            else
+            {
+                Console.WriteLine("Damaging player with: " + (1.379 / Rg + 0.543 / Math.Pow(Rg, 2) - 0.035 / Math.Pow(Rg, 3) + 0.006 / Math.Pow(Rg, 4)) + " mega pascal of pressure");
+                health -= 7000f * (float)(1.379/Rg + 0.543/Math.Pow(Rg, 2) - 0.035/Math.Pow(Rg, 3) + 0.006 / Math.Pow(Rg, 4));
+            }
         }
         public void Update(GameTime gameTime)
         {
@@ -83,8 +93,9 @@ namespace PhysicsPixelDestructionGame
             {
                 velocity.X = 0;
             }
-            if (keyState.IsKeyDown(Keys.B))
+            if (keyState.IsKeyDown(Keys.B) && framesAlive - lastExplosion > 25)
             {
+                lastExplosion = framesAlive;
                 if (PhysicsObjects.projectiles.Count > 0)
                 {
                     for (int i = 0; i < PhysicsObjects.projectiles.Count; i++)
@@ -99,13 +110,18 @@ namespace PhysicsPixelDestructionGame
                 velocity = new Vector2(0, 0);
             }
             velocity.Y += 1;
-            if(keyState.IsKeyDown(Keys.F) && framesAlive - lastProjLaunch > 25)
+            if(keyState.IsKeyDown(Keys.T) && framesAlive - lastProjLaunch > 25)
             {
                 lastProjLaunch = framesAlive;
                 PhysicsObjects.projectiles.Add(new Projectile(ProjectileType.TNT, 1, position, velocity, bombSheet, facing)) ;
             }
+            if (keyState.IsKeyDown(Keys.N) && framesAlive - lastProjLaunch > 25)
+            {
+                lastProjLaunch = framesAlive;
+                PhysicsObjects.projectiles.Add(new Projectile(ProjectileType.Nuclear, 1, position, velocity, bombSheet, facing));
+            }
 
-            if (velocity.Y >= 10)
+                if (velocity.Y >= 10)
             {
                 //velocity.Y = 9;
             }
