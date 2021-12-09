@@ -7,8 +7,8 @@ using System.IO;
 
 namespace PhysicsPixelDestructionGame
 {
+    //menu button coords - (113, 131) -> (322, 336)
     //TODO: 
-    //- Make Explosions -> made but they don't do differing amounts of damage
     //- add menu and playing gamestate
     //-- menu art and buttons and stuff
     //- add logic to check if pixels are connected to the edge?????? What does this mean and why did i add this to my todo list 
@@ -36,8 +36,6 @@ namespace PhysicsPixelDestructionGame
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        private Rectangle window;
-        private const float gravity = 16.35f; //real life g at 60fps assuming 100px = 1m
         private int pixelsMade = 0;
         private MouseState mouseState = new MouseState();
         private Vector2 mousePosVect;
@@ -50,7 +48,9 @@ namespace PhysicsPixelDestructionGame
         private enum GameState
         {
             TerrainCreator,
-            Test
+            Test,
+            Menu,
+            Playing
         }
         private GameState gameState = GameState.Test;
         private string debugString = "";
@@ -70,7 +70,6 @@ namespace PhysicsPixelDestructionGame
             _graphics.IsFullScreen = true;
             _graphics.ApplyChanges();
             //pixArray = new Pixel[(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 10) + 1, (GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 10) + 1];
-            window = GraphicsDevice.Viewport.Bounds;
             base.Initialize();
         }
 
