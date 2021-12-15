@@ -1,16 +1,16 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
+using Microsoft.Xna.Framework.Audio;
 using System;
 using System.Collections.Generic;
 using System.IO;
 
 namespace PhysicsPixelDestructionGame
 {
-    //menu button coords - (113, 131) -> (322, 336)
     //TODO: 
-    //- add menu and playing gamestate
-    //-- menu art and buttons and stuff
+    //playing gamestate
     //- add logic to check if pixels are connected to the edge?????? What does this mean and why did i add this to my todo list 
     //- ^^^^ checking if they want to fall
     //- Documented design
@@ -32,6 +32,13 @@ namespace PhysicsPixelDestructionGame
         Left,
         Right
     }
+    public enum GameState
+    {
+        TerrainCreator,
+        Test,
+        Menu,
+        Playing
+    }
     public class Game1 : Game
     {
         private GraphicsDeviceManager _graphics;
@@ -41,18 +48,15 @@ namespace PhysicsPixelDestructionGame
         private Vector2 mousePosVect;
         private Texture2D whitePixel;
         private Texture2D playerTexture;
+        private Texture2D menu;
         private SpriteFont font;
         private Player player1;
         private Player player2;
+        private Menu mainMen;
         public Texture2D bombs;
-        private enum GameState
-        {
-            TerrainCreator,
-            Test,
-            Menu,
-            Playing
-        }
-        private GameState gameState = GameState.Test;
+        public Song toLoop;
+        public SoundEffect boom;
+        private GameState gameState = GameState.Menu;
         private string debugString = "";
 
         public Game1()
@@ -84,10 +88,20 @@ namespace PhysicsPixelDestructionGame
             PhysicsObjects.players.Add(player1);
             PhysicsObjects.players.Add(player2);
             font = Content.Load<SpriteFont>("font");
+            menu = Content.Load<Texture2D>("menu");
+            toLoop = Content.Load<Song>("Music(loop)");
+            boom = Content.Load<SoundEffect>("Explosion");
+            mainMen = new Menu(menu);
+            PlaySound();
             GenerateTerrain(0);
             // TODO: use this.Content to load your game content here
             //need to generate terrain here??? or perhaps change method call for generating terrain to link to start menu button
 
+        }
+        protected void PlaySound()
+        {
+            MediaPlayer.Play(toLoop);
+            MediaPlayer.IsRepeating = true;
         }
         protected void GenerateTerrain(int level)
         {
@@ -163,7 +177,7 @@ namespace PhysicsPixelDestructionGame
                     }
 
 
-                    PhysicsObjects.players[0].Update(gameTime);
+                    PhysicsObjects.players[0].Update(gameTime, boom);
                     break;
                 case GameState.Test:
 
@@ -174,7 +188,7 @@ namespace PhysicsPixelDestructionGame
                             PhysicsObjects.pixels[i].Update(gameTime);
                         }
                     }
-                    PhysicsObjects.players[0].Update(gameTime);
+                    PhysicsObjects.players[0].Update(gameTime, boom);
                     for (int i = 0; i < PhysicsObjects.projectiles.Count; i++)
                     {
                         if (PhysicsObjects.projectiles[i].exploded)
@@ -187,6 +201,10 @@ namespace PhysicsPixelDestructionGame
                         }
                     }
                     debugString = PhysicsObjects.players[0].health.ToString();
+                    break;
+
+                case GameState.Menu:
+                    gameState = mainMen.Update();
                     break;
 
                 default:
@@ -227,6 +245,10 @@ namespace PhysicsPixelDestructionGame
                         PhysicsObjects.projectiles[i].Draw(_spriteBatch, gameTime);
                     }
                     _spriteBatch.DrawString(font, debugString, new Vector2(200, 200), Color.Black);
+                    break;
+
+                case GameState.Menu:
+                    mainMen.Draw(_spriteBatch);
                     break;
 
             }

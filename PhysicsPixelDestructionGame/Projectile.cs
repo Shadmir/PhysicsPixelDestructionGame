@@ -4,6 +4,7 @@ using System.Text;
 using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Audio;
 
 
 namespace PhysicsPixelDestructionGame
@@ -163,7 +164,7 @@ namespace PhysicsPixelDestructionGame
         {
             projectile.Draw(spriteBatch, spritebounds, new Rectangle((int)position.X, (int)position.Y, width, height), Color.White);
         }
-        public void Explode()
+        public void Explode(SoundEffect boom)
         {
             for (int i = 0; i < PhysicsObjects.players.Count; i++)
             {
@@ -174,6 +175,7 @@ namespace PhysicsPixelDestructionGame
                 float Rg = distance / (float)Math.Pow((double)equiv, (double)1.0 / 3.0);
                 Console.WriteLine("RG: " + Rg);
                 PhysicsObjects.players[i].Damage(Rg);
+                boom.Play();
                 exploded = true;
             }
         }

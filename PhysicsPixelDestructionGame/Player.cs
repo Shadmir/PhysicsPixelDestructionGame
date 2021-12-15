@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
 using System;
 using System.Collections.Generic;
 
@@ -56,7 +57,7 @@ namespace PhysicsPixelDestructionGame
                 health -= 7000f * (float)(1.379/Rg + 0.543/Math.Pow(Rg, 2) - 0.035/Math.Pow(Rg, 3) + 0.006 / Math.Pow(Rg, 4));
             }
         }
-        public void Update(GameTime gameTime)
+        public void Update(GameTime gameTime, SoundEffect boom)
         {
             framesAlive++;
             keyState = Keyboard.GetState();
@@ -100,7 +101,7 @@ namespace PhysicsPixelDestructionGame
                 {
                     for (int i = 0; i < PhysicsObjects.projectiles.Count; i++)
                     {
-                        PhysicsObjects.projectiles[i].Explode();
+                        PhysicsObjects.projectiles[i].Explode(boom);
                     }
                 }
             }
