@@ -89,7 +89,7 @@ namespace PhysicsPixelDestructionGame
             PhysicsObjects.players.Add(player2);
             font = Content.Load<SpriteFont>("font");
             menu = Content.Load<Texture2D>("menu");
-            toLoop = Content.Load<Song>("Music(loop)");
+            toLoop = Content.Load<Song>("ShadmirGameSong");
             boom = Content.Load<SoundEffect>("Explosion");
             mainMen = new Menu(menu);
             PlaySound();

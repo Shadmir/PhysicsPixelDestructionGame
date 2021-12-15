@@ -68,6 +68,12 @@
 /processorParam:TextureFormat=Color
 /build:playerSheet.png
 
+#begin ShadmirGameSong.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:ShadmirGameSong.mp3
+
 #begin whitePixel.png
 /importer:TextureImporter
 /processor:TextureProcessor
