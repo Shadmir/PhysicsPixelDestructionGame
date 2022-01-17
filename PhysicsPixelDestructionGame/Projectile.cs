@@ -9,21 +9,19 @@ using Microsoft.Xna.Framework.Audio;
 
 namespace PhysicsPixelDestructionGame
 {
-    class Projectile
+    class Projectile : MoveableObject
     {
         public Sprite projectile;
-        public Vector2 position;
         public bool exploded = false;
-        public Vector2 velocity;
         public Rectangle spritebounds;
         public ProjectileType projectileType;
-        public int width = 15;
-        public int height = 15;
         public readonly Dictionary<ProjectileType, float> TntEquiv = new Dictionary<ProjectileType, float> {{ ProjectileType.TNT, 1 }, { ProjectileType.C4, 30.6f }, { ProjectileType.Gunpowder, 0.7f }, { ProjectileType.Nuclear, 490245.5f }, { ProjectileType.Firework, 1.5f }, { ProjectileType.HolyHandGrenade, 50f }};
         public int mass;
         private bool collidingL = false, collidingR = false, collidingT = false, collidingB = false, colliding = false;
 
         public Projectile(ProjectileType type, int Mass, Vector2 Pos, Vector2 Vel, Texture2D sheet, Direction initDir) {
+            width = 15;
+            height = 15;
             projectileType = type;
             projectile = new Sprite(sheet);
             mass = Mass;
@@ -74,7 +72,7 @@ namespace PhysicsPixelDestructionGame
             Rectangle projectileFuturePos = new Rectangle((int)(position.X + velocity.X), (int)(position.Y + velocity.Y), width, height);
             foreach (Pixel pixel in PhysicsObjects.pixels)
             {
-                Rectangle pixelPos = new Rectangle((int)pixel.Position.X, (int)pixel.Position.Y, pixel.Width, pixel.Height);
+                Rectangle pixelPos = new Rectangle((int)pixel.position.X, (int)pixel.position.Y, pixel.Width, pixel.Height);
                 Rectangle projectilePos = new Rectangle((int)position.X, (int)position.Y, width, height);
                 if (projectilePos.Intersects(pixelPos))
                 {

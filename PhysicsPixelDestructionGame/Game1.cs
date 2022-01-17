@@ -11,7 +11,7 @@ namespace PhysicsPixelDestructionGame
 {
     //TODO: 
     //playing gamestate
-    //- add logic to check if pixels are connected to the edge?????? What does this mean and why did i add this to my todo list 
+    //- add logic to check if pixels are connected to the edge so they can fall off
     //- ^^^^ checking if they want to fall
     //- Documented design
     //- Finish analysis properly

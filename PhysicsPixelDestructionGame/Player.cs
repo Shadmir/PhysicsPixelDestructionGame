@@ -9,16 +9,14 @@ using System.Collections.Generic;
 namespace PhysicsPixelDestructionGame
 {
     //size of player spritesheet is 10x40
-    class Player
+    class Player : MoveableObject
     {
         private Direction facing = Direction.Right;
         private KeyboardState keyState;
         private KeyboardState lastState;
         private long lastProjLaunch = 0L;
         public MouseState mouse;
-        public Vector2 position;
         public List<Projectile> bombs = new List<Projectile>();
-        public Vector2 velocity;
         public Sprite playerPicture;
         public Texture2D bombSheet;
         public Rectangle playerFuturePos;
