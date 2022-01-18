@@ -148,7 +148,7 @@ namespace PhysicsPixelDestructionGame
                     {
                         foreach (var pixel in PhysicsObjects.pixels)
                         {
-                            if (new Rectangle((int)mousePosVect.X, (int)mousePosVect.Y, 10, 10).Intersects(new Rectangle((int)pixel.Position.X, (int)pixel.Position.Y, 10, 10)))
+                            if (new Rectangle((int)mousePosVect.X, (int)mousePosVect.Y, 10, 10).Intersects(new Rectangle((int)pixel.position.X, (int)pixel.position.Y, 10, 10)))
                             {
                                 colliding = true;
                             }
@@ -170,7 +170,7 @@ namespace PhysicsPixelDestructionGame
                             string line = "";
                             foreach (var pixel in PhysicsObjects.pixels)
                             {
-                                line += "" + pixel.Position.X.ToString() + "," + pixel.Position.Y.ToString() + "," + pixel.pixelID.ToString() + ":";
+                                line += "" + pixel.position.X.ToString() + "," + pixel.position.Y.ToString() + "," + pixel.pixelID.ToString() + ":";
                             }
                             sw.Write(line);
                         }

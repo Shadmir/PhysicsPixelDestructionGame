@@ -21,8 +21,6 @@ namespace PhysicsPixelDestructionGame
         public Texture2D bombSheet;
         public Rectangle playerFuturePos;
         public Rectangle spriteRectangle = new Rectangle(0, 0, 20, 10);
-        public int width = 50;
-        public int height = 25;
         public long framesAlive = 0L;
         public long lastExplosion = 0L;
         public long lastFrameJumped = 0L;
@@ -31,6 +29,8 @@ namespace PhysicsPixelDestructionGame
         public Color color = Color.White;
         public Player(Texture2D texture, Texture2D bombs)
         {
+            width = 50;
+            height = 25;
             playerPicture = new Sprite(texture);
             position = new Vector2(0, 0);
             velocity = new Vector2(0, 0);
@@ -132,7 +132,7 @@ namespace PhysicsPixelDestructionGame
             playerFuturePos = new Rectangle((int)(position.X + velocity.X), (int)(position.Y + velocity.Y), width, height);
             foreach (Pixel pixel in PhysicsObjects.pixels)
             {
-                Rectangle pixelPos = new Rectangle((int)pixel.Position.X, (int)pixel.Position.Y, pixel.Width, pixel.Height);
+                Rectangle pixelPos = new Rectangle((int)pixel.position.X, (int)pixel.position.Y, pixel.Width, pixel.Height);
                 Rectangle playerPos = new Rectangle((int)position.X, (int)position.Y, width, height);
                 if (playerPos.Intersects(pixelPos))
                 {
