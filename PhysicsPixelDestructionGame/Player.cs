@@ -55,7 +55,7 @@ namespace PhysicsPixelDestructionGame
                 health -= 7000f * (float)(1.379/Rg + 0.543/Math.Pow(Rg, 2) - 0.035/Math.Pow(Rg, 3) + 0.006 / Math.Pow(Rg, 4));
             }
         }
-        public void Update(GameTime gameTime, SoundEffect boom)
+        public void Update(GameTime gameTime, SoundEffect boom, GameState state)
         {
             framesAlive++;
             keyState = Keyboard.GetState();
@@ -74,11 +74,15 @@ namespace PhysicsPixelDestructionGame
             }
             if (keyState.IsKeyDown(Keys.W))
             {
-                //if (framesAlive - lastFrameJumped > 25)
-                //{
+                if (framesAlive - lastFrameJumped > 25 && state == GameState.Playing)
+                {
                     lastFrameJumped = framesAlive;
                     velocity.Y -= jumpStrength;
-                //}
+                }
+                else
+                {
+                    velocity.Y -= jumpStrength;
+                }
             }
             if (keyState.IsKeyDown(Keys.S))
             {

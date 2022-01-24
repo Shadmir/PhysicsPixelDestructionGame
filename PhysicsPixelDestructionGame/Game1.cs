@@ -16,6 +16,13 @@ namespace PhysicsPixelDestructionGame
     //- Documented design
     //- Finish analysis properly
     //- Turn-based gameplay
+    // making the projectile path simulated before the projectile fires
+    // power slider
+    // change the angle
+    // change the  projectile you can shoot
+    // mass slider ??????????
+    // damage work properly
+    // destructible terrain.
     public enum ProjectileType
     {
         C4,
@@ -56,7 +63,7 @@ namespace PhysicsPixelDestructionGame
         public Texture2D bombs;
         public Song toLoop;
         public SoundEffect boom;
-        private GameState gameState = GameState.Menu;
+        public GameState gameState { get; private set; } = GameState.Menu;
         private string debugString = "";
 
         public Game1()
@@ -177,7 +184,7 @@ namespace PhysicsPixelDestructionGame
                     }
 
 
-                    PhysicsObjects.players[0].Update(gameTime, boom);
+                    PhysicsObjects.players[0].Update(gameTime, boom, gameState);
                     break;
                 case GameState.Test:
 
@@ -188,7 +195,7 @@ namespace PhysicsPixelDestructionGame
                             PhysicsObjects.pixels[i].Update(gameTime);
                         }
                     }
-                    PhysicsObjects.players[0].Update(gameTime, boom);
+                    PhysicsObjects.players[0].Update(gameTime, boom, gameState);
                     for (int i = 0; i < PhysicsObjects.projectiles.Count; i++)
                     {
                         if (PhysicsObjects.projectiles[i].exploded)
