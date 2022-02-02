@@ -72,7 +72,7 @@ namespace PhysicsPixelDestructionGame
             Rectangle projectileFuturePos = new Rectangle((int)(position.X + velocity.X), (int)(position.Y + velocity.Y), width, height);
             foreach (Pixel pixel in PhysicsObjects.pixels)
             {
-                Rectangle pixelPos = new Rectangle((int)pixel.position.X, (int)pixel.position.Y, pixel.Width, pixel.Height);
+                Rectangle pixelPos = new Rectangle((int)pixel.position.X, (int)pixel.position.Y, pixel.width, pixel.height);
                 Rectangle projectilePos = new Rectangle((int)position.X, (int)position.Y, width, height);
                 if (projectilePos.Intersects(pixelPos))
                 {
@@ -81,10 +81,10 @@ namespace PhysicsPixelDestructionGame
                 if (projectileFuturePos.Intersects(pixelPos))
                 {
                     colliding = true;
-                    Rectangle pixLeft = new Rectangle(pixelPos.Left, pixelPos.Top, 1, pixel.Height);
-                    Rectangle pixTop = new Rectangle(pixelPos.Left, pixelPos.Top, pixel.Width, 1);
-                    Rectangle pixRight = new Rectangle(pixelPos.Right, pixelPos.Top, 1, pixel.Height);
-                    Rectangle pixBottom = new Rectangle(pixelPos.Left, pixelPos.Bottom, pixel.Width, 1);
+                    Rectangle pixLeft = new Rectangle(pixelPos.Left, pixelPos.Top, 1, pixel.height);
+                    Rectangle pixTop = new Rectangle(pixelPos.Left, pixelPos.Top, pixel.width, 1);
+                    Rectangle pixRight = new Rectangle(pixelPos.Right, pixelPos.Top, 1, pixel.height);
+                    Rectangle pixBottom = new Rectangle(pixelPos.Left, pixelPos.Bottom, pixel.width, 1);
                     for (int x = 0; x < (int)velocity.X; x++)
                     {
                         for (int y = 0; y < (int)velocity.Y; y++)

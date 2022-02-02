@@ -21,14 +21,14 @@ namespace PhysicsPixelDestructionGame
         public Texture2D bombSheet;
         public Rectangle playerFuturePos;
         public Rectangle spriteRectangle = new Rectangle(0, 0, 20, 10);
-        public long framesAlive = 0L;
         public long lastExplosion = 0L;
         public long lastFrameJumped = 0L;
         public int jumpStrength = 10;
-        public float health = 100f;
         public Color color = Color.White;
         public Player(Texture2D texture, Texture2D bombs)
         {
+            health = 100f;
+            framesAlive = 0L;
             width = 50;
             height = 25;
             playerPicture = new Sprite(texture);
@@ -132,7 +132,7 @@ namespace PhysicsPixelDestructionGame
             playerFuturePos = new Rectangle((int)(position.X + velocity.X), (int)(position.Y + velocity.Y), width, height);
             foreach (Pixel pixel in PhysicsObjects.pixels)
             {
-                Rectangle pixelPos = new Rectangle((int)pixel.position.X, (int)pixel.position.Y, pixel.Width, pixel.Height);
+                Rectangle pixelPos = new Rectangle((int)pixel.position.X, (int)pixel.position.Y, pixel.width, pixel.height);
                 Rectangle playerPos = new Rectangle((int)position.X, (int)position.Y, width, height);
                 if (playerPos.Intersects(pixelPos))
                 {
@@ -149,7 +149,7 @@ namespace PhysicsPixelDestructionGame
 
                 //speculative contact ^
             }
-            position += velocity;
+            Move(velocity);
             lastState = keyState;
         }
     }
