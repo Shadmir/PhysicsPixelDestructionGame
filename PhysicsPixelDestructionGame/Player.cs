@@ -9,6 +9,7 @@ using System.Collections.Generic;
 namespace PhysicsPixelDestructionGame
 {
     //size of player spritesheet is 10x40
+    //TODO: make the player check for collisions by using the new collision method in the MoveableObject class.
     class Player : MoveableObject
     {
         private Direction facing = Direction.Right;
@@ -63,13 +64,13 @@ namespace PhysicsPixelDestructionGame
             if (keyState.IsKeyDown(Keys.D))
             {
                 facing = Direction.Right;
-                velocity.X = 5;
+                SetVel(new Vector2(5, velocity.Y));
                 spriteRectangle = new Rectangle(20, 0, 20, 10);
             }
             if (keyState.IsKeyDown(Keys.A))
             {
                 facing = Direction.Left;
-                velocity.X = -5;
+                SetVel(new Vector2(-5, velocity.Y));
                 spriteRectangle = new Rectangle(0, 0, 20, 10);
             }
             if (keyState.IsKeyDown(Keys.W))
@@ -86,15 +87,15 @@ namespace PhysicsPixelDestructionGame
             }
             if (keyState.IsKeyDown(Keys.S))
             {
-                velocity.Y = 5;
+                SetVel(new Vector2(velocity.X, 5));
             }
             if (keyState.IsKeyUp(Keys.W) && keyState.IsKeyUp(Keys.S) && (lastState.IsKeyDown(Keys.W) || lastState.IsKeyDown(Keys.S)))
             {
-                velocity.Y = 0;
+                SetVel(new Vector2(velocity.X, 0));
             }
             if (keyState.IsKeyUp(Keys.A) && keyState.IsKeyUp(Keys.D))
             {
-                velocity.X = 0;
+                SetVel(new Vector2(0, velocity.Y));
             }
             if (keyState.IsKeyDown(Keys.B) && framesAlive - lastExplosion > 25)
             {
@@ -109,14 +110,19 @@ namespace PhysicsPixelDestructionGame
             }
             if (keyState.IsKeyDown(Keys.R))
             {
-                position = new Vector2(0, 0);
-                velocity = new Vector2(0, 0);
+                Teleport(new Vector2(0,0));
+                SetVel(new Vector2(0,0));
             }
             velocity.Y += 1;
             if(keyState.IsKeyDown(Keys.T) && framesAlive - lastProjLaunch > 25)
             {
                 lastProjLaunch = framesAlive;
                 PhysicsObjects.projectiles.Add(new Projectile(ProjectileType.TNT, 1, position, velocity, bombSheet, facing)) ;
+            }
+            if (keyState.IsKeyDown(Keys.F) && framesAlive - lastProjLaunch > 25)
+            {
+                lastProjLaunch = framesAlive;
+                PhysicsObjects.projectiles.Add(new Projectile(ProjectileType.Firework, 1, position, velocity, bombSheet, facing));
             }
             if (keyState.IsKeyDown(Keys.N) && framesAlive - lastProjLaunch > 25)
             {

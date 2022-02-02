@@ -36,7 +36,10 @@ namespace PhysicsPixelDestructionGame
             List<Pixel> collidingWith = new List<Pixel>();
             foreach (Pixel target in targets)
             {
-                if (futurePos.Intersects(new Rectangle((int)target.position.X, (int)target.position.Y, target.width, target.height))) ;
+                if (futurePos.Intersects(new Rectangle((int)target.position.X, (int)target.position.Y, target.width, target.height)))
+                {
+                    collidingWith.Add(target);
+                }
             }
 
 
