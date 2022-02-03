@@ -43,6 +43,27 @@ namespace PhysicsPixelDestructionGame
             playerPicture.Draw(spriteBatch, spriteRectangle, new Rectangle((int)position.X, (int)position.Y, width, height), color);
 
         }
+        public void HandlePlayerCollision(List<Pixel> collidingWith)
+        {
+            if (collidingWith.Count != 0)
+            {
+                Pixel closestPix = collidingWith[0];
+                foreach (var pix in collidingWith)
+                {
+                    Vector2 newDist = new Vector2(pix.position.X - position.X, pix.position.Y - position.Y);
+                    Vector2 currentClosestDist = new Vector2(closestPix.position.X - position.X, closestPix.position.Y - position.Y);
+                    if (Math.Abs(newDist.Length()) < Math.Abs(currentClosestDist.Length()))
+                    {
+                        closestPix = pix;
+                    }
+                }
+                //find how i will collide with this pixel
+                if ()
+                {
+
+                }
+            }
+        }
         public void Damage(float Rg)
         {
             if (Rg > 0.3f)
@@ -53,7 +74,7 @@ namespace PhysicsPixelDestructionGame
             else
             {
                 Console.WriteLine("Damaging player with: " + (1.379 / Rg + 0.543 / Math.Pow(Rg, 2) - 0.035 / Math.Pow(Rg, 3) + 0.006 / Math.Pow(Rg, 4)) + " mega pascal of pressure");
-                health -= 7000f * (float)(1.379/Rg + 0.543/Math.Pow(Rg, 2) - 0.035/Math.Pow(Rg, 3) + 0.006 / Math.Pow(Rg, 4));
+                health -= 7000f * (float)(1.379 / Rg + 0.543 / Math.Pow(Rg, 2) - 0.035 / Math.Pow(Rg, 3) + 0.006 / Math.Pow(Rg, 4));
             }
         }
         public void Update(GameTime gameTime, SoundEffect boom, GameState state)
@@ -110,14 +131,14 @@ namespace PhysicsPixelDestructionGame
             }
             if (keyState.IsKeyDown(Keys.R))
             {
-                Teleport(new Vector2(0,0));
-                SetVel(new Vector2(0,0));
+                Teleport(new Vector2(0, 0));
+                SetVel(new Vector2(0, 0));
             }
-            velocity.Y += 1;
-            if(keyState.IsKeyDown(Keys.T) && framesAlive - lastProjLaunch > 25)
+            Accelerate(new Vector2(0, 1));
+            if (keyState.IsKeyDown(Keys.T) && framesAlive - lastProjLaunch > 25)
             {
                 lastProjLaunch = framesAlive;
-                PhysicsObjects.projectiles.Add(new Projectile(ProjectileType.TNT, 1, position, velocity, bombSheet, facing)) ;
+                PhysicsObjects.projectiles.Add(new Projectile(ProjectileType.TNT, 1, position, velocity, bombSheet, facing));
             }
             if (keyState.IsKeyDown(Keys.F) && framesAlive - lastProjLaunch > 25)
             {
@@ -129,36 +150,28 @@ namespace PhysicsPixelDestructionGame
                 lastProjLaunch = framesAlive;
                 PhysicsObjects.projectiles.Add(new Projectile(ProjectileType.Nuclear, 1, position, velocity, bombSheet, facing));
             }
-
-                if (velocity.Y >= 10)
-            {
-                //velocity.Y = 9;
-            }
-            if (velocity.Y <= -10)
-            {
-                //velocity.Y = -9;
-            }
-
             playerFuturePos = new Rectangle((int)(position.X + velocity.X), (int)(position.Y + velocity.Y), width, height);
-            foreach (Pixel pixel in PhysicsObjects.pixels)
-            {
-                Rectangle pixelPos = new Rectangle((int)pixel.position.X, (int)pixel.position.Y, pixel.width, pixel.height);
-                Rectangle playerPos = new Rectangle((int)position.X, (int)position.Y, width, height);
-                if (playerPos.Intersects(pixelPos))
-                {
-                    
-                    //position.X -= 10;
-                    position.Y -= 10;
-                }
-                if (playerFuturePos.Intersects(pixelPos))
-                {
-                    //velocity.X = 0;
+            //foreach (Pixel pixel in PhysicsObjects.pixels)
+            //{
+            //    Rectangle pixelPos = new Rectangle((int)pixel.position.X, (int)pixel.position.Y, pixel.width, pixel.height);
+            //    Rectangle playerPos = new Rectangle((int)position.X, (int)position.Y, width, height);
+            //    if (playerPos.Intersects(pixelPos))
+            //    {
 
-                    velocity.Y = 0;
-                }
+            //        //position.X -= 10;
+            //        position.Y -= 10;
+            //    }
+            //    if (playerFuturePos.Intersects(pixelPos))
+            //    {
+            //        //velocity.X = 0;
 
-                //speculative contact ^
-            }
+            //        velocity.Y = 0;
+            //    }
+
+            //    //speculative contact ^
+            //}
+            HandlePlayerCollision(CheckFloorCollision(playerFuturePos));
+
             Move(velocity);
             lastState = keyState;
         }
