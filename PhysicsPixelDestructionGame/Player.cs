@@ -48,12 +48,12 @@ namespace PhysicsPixelDestructionGame
             if (Rg > 0.3f)
             {
                 Console.WriteLine("Damaging player with " + ((0.082f / Rg) + 0.26f / (float)Math.Pow(Rg, 2) + 0.69f / (float)Math.Pow(Rg, 3)) + " Mega Pascal of pressure.");
-                health -= 7000f * ((0.082f / Rg) + 0.26f / (float)Math.Pow(Rg, 2) + 0.69f / (float)Math.Pow(Rg, 3));
+                health -= 1f * ((0.082f / Rg) + 0.26f / (float)Math.Pow(Rg, 2) + 0.69f / (float)Math.Pow(Rg, 3));
             }
             else
             {
                 Console.WriteLine("Damaging player with: " + (1.379 / Rg + 0.543 / Math.Pow(Rg, 2) - 0.035 / Math.Pow(Rg, 3) + 0.006 / Math.Pow(Rg, 4)) + " mega pascal of pressure");
-                health -= 7000f * (float)(1.379 / Rg + 0.543 / Math.Pow(Rg, 2) - 0.035 / Math.Pow(Rg, 3) + 0.006 / Math.Pow(Rg, 4));
+                health -= 1f * (float)(1.379 / Rg + 0.543 / Math.Pow(Rg, 2) - 0.035 / Math.Pow(Rg, 3) + 0.006 / Math.Pow(Rg, 4));
             }
         }
         public void Update(GameTime gameTime, SoundEffect boom, GameState state)

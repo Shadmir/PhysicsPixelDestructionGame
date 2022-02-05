@@ -23,245 +23,249 @@ namespace PhysicsPixelDestructionGame
     // mass slider ??????????
     // damage work properly
     // destructible terrain.
-    public enum ProjectileType
+
+/*
+ * - switch between p1 and p2 
+- move players with f=ma when they get hit by an explosion
+- destructible terrain
+- 
+*/
+public enum ProjectileType
+{
+    C4,
+    TNT,
+    Gunpowder,
+    Nuclear,
+    Firework,
+    HolyHandGrenade
+}
+public enum Direction
+{
+    Up,
+    Down,
+    Left,
+    Right
+}
+public enum GameState
+{
+    TerrainCreator,
+    Test,
+    Menu,
+    Playing
+}
+public class Game1 : Game
+{
+    private GraphicsDeviceManager _graphics;
+    private SpriteBatch _spriteBatch;
+    private int pixelsMade = 0;
+    private MouseState mouseState = new MouseState();
+    private Vector2 mousePosVect;
+    private Texture2D whitePixel;
+    private Texture2D playerTexture;
+    private Texture2D menu;
+    private SpriteFont font;
+    private Player player1;
+    private Player player2;
+    private Menu mainMen;
+    public Texture2D bombs;
+    public Song toLoop;
+    public SoundEffect boom;
+    public GameState gameState { get; private set; } = GameState.Menu;
+    private string debugString = "";
+
+    public Game1()
     {
-        C4,
-        TNT,
-        Gunpowder,
-        Nuclear,
-        Firework,
-        HolyHandGrenade
+        _graphics = new GraphicsDeviceManager(this);
+        Content.RootDirectory = "Content";
+        IsMouseVisible = true;
     }
-    public enum Direction
+
+    protected override void Initialize()
     {
-        Up,
-        Down,
-        Left,
-        Right
+        // TODO: Add your initialization logic here
+        _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+        _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height; // makes fullscreen & whatever current monitor res is
+        _graphics.IsFullScreen = true;
+        _graphics.ApplyChanges();
+        //pixArray = new Pixel[(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 10) + 1, (GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 10) + 1];
+        base.Initialize();
     }
-    public enum GameState
+
+    protected override void LoadContent()
     {
-        TerrainCreator,
-        Test,
-        Menu,
-        Playing
+        _spriteBatch = new SpriteBatch(GraphicsDevice);
+        bombs = Content.Load<Texture2D>("bombSprites");
+        whitePixel = Content.Load<Texture2D>("whitePixel");
+        playerTexture = Content.Load<Texture2D>("playerSheet");
+        player1 = new Player(playerTexture, bombs);
+        player2 = new Player(playerTexture, bombs);
+        PhysicsObjects.players.Add(player1);
+        PhysicsObjects.players.Add(player2);
+        font = Content.Load<SpriteFont>("font");
+        menu = Content.Load<Texture2D>("menu");
+        toLoop = Content.Load<Song>("ShadmirGameSong");
+        boom = Content.Load<SoundEffect>("Explosion");
+        mainMen = new Menu(menu);
+        PlaySound();
+        GenerateTerrain(0);    
     }
-    public class Game1 : Game
+    protected void PlaySound()
     {
-        private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
-        private int pixelsMade = 0;
-        private MouseState mouseState = new MouseState();
-        private Vector2 mousePosVect;
-        private Texture2D whitePixel;
-        private Texture2D playerTexture;
-        private Texture2D menu;
-        private SpriteFont font;
-        private Player player1;
-        private Player player2;
-        private Menu mainMen;
-        public Texture2D bombs;
-        public Song toLoop;
-        public SoundEffect boom;
-        public GameState gameState { get; private set; } = GameState.Menu;
-        private string debugString = "";
-
-        public Game1()
+        MediaPlayer.Play(toLoop);
+        MediaPlayer.IsRepeating = true;
+    }
+    protected void GenerateTerrain(int level)
+    {
+        string inputLine = "";
+        try
         {
-            _graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
-            IsMouseVisible = true;
-        }
-
-        protected override void Initialize()
-        {
-            // TODO: Add your initialization logic here
-            _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-            _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height; // makes fullscreen & whatever current monitor res is
-            _graphics.IsFullScreen = true;
-            _graphics.ApplyChanges();
-            //pixArray = new Pixel[(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 10) + 1, (GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 10) + 1];
-            base.Initialize();
-        }
-
-        protected override void LoadContent()
-        {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
-            bombs = Content.Load<Texture2D>("bombSprites");
-            whitePixel = Content.Load<Texture2D>("whitePixel");
-            playerTexture = Content.Load<Texture2D>("playerSheet");
-            player1 = new Player(playerTexture, bombs);
-            player2 = new Player(playerTexture, bombs);
-            PhysicsObjects.players.Add(player1);
-            PhysicsObjects.players.Add(player2);
-            font = Content.Load<SpriteFont>("font");
-            menu = Content.Load<Texture2D>("menu");
-            toLoop = Content.Load<Song>("ShadmirGameSong");
-            boom = Content.Load<SoundEffect>("Explosion");
-            mainMen = new Menu(menu);
-            PlaySound();
-            GenerateTerrain(0);
-            // TODO: use this.Content to load your game content here
-            //need to generate terrain here??? or perhaps change method call for generating terrain to link to start menu button
-
-        }
-        protected void PlaySound()
-        {
-            MediaPlayer.Play(toLoop);
-            MediaPlayer.IsRepeating = true;
-        }
-        protected void GenerateTerrain(int level)
-        {
-            string inputLine = "";
-            try
+            using (StreamReader sr = new StreamReader("terrain.txt"))
             {
-                using (StreamReader sr = new StreamReader("terrain.txt"))
+                for (int i = 0; i < level + 1; i++)
                 {
-                    for (int i = 0; i < level + 1; i++)
-                    {
-                        inputLine = sr.ReadLine();
-                    }
-                    string[] inputSplit = inputLine.Split(":");
-                    for (int i = 0; i < inputSplit.Length - 1; i++)
-                    {
-                        string[] pixDefSplit = inputSplit[i].Split(",");
-                        debugString = pixDefSplit[pixDefSplit.Length - 1];
-                        PhysicsObjects.pixels.Add(new Pixel(whitePixel, new Vector2(float.Parse(pixDefSplit[0]), float.Parse(pixDefSplit[1])), int.Parse(pixDefSplit[2])));
-                        pixelsMade++;
-                    }
+                    inputLine = sr.ReadLine();
                 }
-            } catch (Exception e)
-            {
-                debugString = "No terrain file found.";
-
+                string[] inputSplit = inputLine.Split(":");
+                for (int i = 0; i < inputSplit.Length - 1; i++)
+                {
+                    string[] pixDefSplit = inputSplit[i].Split(",");
+                    debugString = pixDefSplit[pixDefSplit.Length - 1];
+                    PhysicsObjects.pixels.Add(new Pixel(whitePixel, new Vector2(float.Parse(pixDefSplit[0]), float.Parse(pixDefSplit[1])), int.Parse(pixDefSplit[2])));
+                    pixelsMade++;
+                }
             }
+        } catch (Exception e)
+        {
+            debugString = "No terrain file found.";
 
         }
 
-        protected override void Update(GameTime gameTime)
+    }
+
+    protected override void Update(GameTime gameTime)
+    {
+        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-            {
-                Exit();
-            }
-            mouseState = Mouse.GetState();
-            mousePosVect = new Vector2(mouseState.X, mouseState.Y);
-            bool colliding = false;
-            debugString = PhysicsObjects.players[0].position.X.ToString() + "," + PhysicsObjects.players[0].position.Y.ToString() + "," + PhysicsObjects.players[0].velocity.Y.ToString();
-            switch (gameState)
-            {
-                case GameState.TerrainCreator:
-                    if (mouseState.LeftButton == ButtonState.Pressed)
+            Exit();
+        }
+        mouseState = Mouse.GetState();
+        mousePosVect = new Vector2(mouseState.X, mouseState.Y);
+        bool colliding = false;
+        debugString = PhysicsObjects.players[0].position.X.ToString() + "," + PhysicsObjects.players[0].position.Y.ToString() + "," + PhysicsObjects.players[0].velocity.Y.ToString();
+        switch (gameState)
+        {
+            case GameState.TerrainCreator:
+                if (mouseState.LeftButton == ButtonState.Pressed)
+                {
+                    foreach (var pixel in PhysicsObjects.pixels)
                     {
-                        foreach (var pixel in PhysicsObjects.pixels)
+                        if (new Rectangle((int)mousePosVect.X, (int)mousePosVect.Y, 10, 10).Intersects(new Rectangle((int)pixel.position.X, (int)pixel.position.Y, 10, 10)))
                         {
-                            if (new Rectangle((int)mousePosVect.X, (int)mousePosVect.Y, 10, 10).Intersects(new Rectangle((int)pixel.position.X, (int)pixel.position.Y, 10, 10)))
-                            {
-                                colliding = true;
-                            }
-                            else
-                            {
-                                colliding = false;
-                            }
-                        }
-                        if (!colliding)
-                        {
-                            PhysicsObjects.pixels.Add(new Pixel(whitePixel, new Vector2(mousePosVect.X - mousePosVect.X % 10, mousePosVect.Y - mousePosVect.Y % 10), pixelsMade));
-                            pixelsMade++;
-                        }
-                    }
-                    if (mouseState.RightButton == ButtonState.Pressed)
-                    {
-                        using (StreamWriter sw = new StreamWriter("terrain.txt"))
-                        {
-                            string line = "";
-                            foreach (var pixel in PhysicsObjects.pixels)
-                            {
-                                line += "" + pixel.position.X.ToString() + "," + pixel.position.Y.ToString() + "," + pixel.pixelID.ToString() + ":";
-                            }
-                            sw.Write(line);
-                        }
-                    }
-
-
-                    PhysicsObjects.players[0].Update(gameTime, boom, gameState);
-                    break;
-                case GameState.Test:
-
-                    if (PhysicsObjects.pixels.Count != 0)
-                    {
-                        for (int i = 0; i < PhysicsObjects.pixels.Count; i++)
-                        {
-                            PhysicsObjects.pixels[i].Update(gameTime);
-                        }
-                    }
-                    PhysicsObjects.players[0].Update(gameTime, boom, gameState);
-                    for (int i = 0; i < PhysicsObjects.projectiles.Count; i++)
-                    {
-                        if (PhysicsObjects.projectiles[i].exploded)
-                        {
-                            PhysicsObjects.projectiles.RemoveAt(i);
+                            colliding = true;
                         }
                         else
                         {
-                            PhysicsObjects.projectiles[i].Update(gameTime);
+                            colliding = false;
                         }
                     }
-                    debugString = PhysicsObjects.players[0].health.ToString();
-                    break;
+                    if (!colliding)
+                    {
+                        PhysicsObjects.pixels.Add(new Pixel(whitePixel, new Vector2(mousePosVect.X - mousePosVect.X % 10, mousePosVect.Y - mousePosVect.Y % 10), pixelsMade));
+                        pixelsMade++;
+                    }
+                }
+                if (mouseState.RightButton == ButtonState.Pressed)
+                {
+                    using (StreamWriter sw = new StreamWriter("terrain.txt"))
+                    {
+                        string line = "";
+                        foreach (var pixel in PhysicsObjects.pixels)
+                        {
+                            line += "" + pixel.position.X.ToString() + "," + pixel.position.Y.ToString() + "," + pixel.pixelID.ToString() + ":";
+                        }
+                        sw.Write(line);
+                    }
+                }
 
-                case GameState.Menu:
-                    gameState = mainMen.Update();
-                    break;
 
-                default:
-                    break;
-            }
-            // TODO: Add your update logic here
-            
-            
-            base.Update(gameTime);
+                PhysicsObjects.players[0].Update(gameTime, boom, gameState);
+                break;
+            case GameState.Test:
+
+                if (PhysicsObjects.pixels.Count != 0)
+                {
+                    for (int i = 0; i < PhysicsObjects.pixels.Count; i++)
+                    {
+                        PhysicsObjects.pixels[i].Update(gameTime);
+                    }
+                }
+                PhysicsObjects.players[0].Update(gameTime, boom, gameState);
+                for (int i = 0; i < PhysicsObjects.projectiles.Count; i++)
+                {
+                    if (PhysicsObjects.projectiles[i].exploded)
+                    {
+                        PhysicsObjects.projectiles.RemoveAt(i);
+                    }
+                    else
+                    {
+                        PhysicsObjects.projectiles[i].Update(gameTime);
+                    }
+                }
+                debugString = PhysicsObjects.players[0].health.ToString();
+                break;
+
+            case GameState.Menu:
+                gameState = mainMen.Update();
+                break;
+
+            default:
+                break;
         }
+        // TODO: Add your update logic here
 
-        protected override void Draw(GameTime gameTime)
-        {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, null);
-            _spriteBatch.DrawString(font, "\"WASD\" to move, \"R\" to reset, \"F\" to fire.", new Vector2(600, 500), Color.White);
-            switch (gameState)
-            {
-                case GameState.TerrainCreator:
-                    foreach (Pixel pixel in PhysicsObjects.pixels)
-                    {
-                        pixel.Draw(_spriteBatch, gameTime);
-                    }
-
-                    PhysicsObjects.players[0].Draw(_spriteBatch, gameTime);
-                    _spriteBatch.DrawString(font, debugString, new Vector2(200, 200), Color.Black);
-                   
-                    break;
-                case GameState.Test:
-                    foreach (Pixel pixel in PhysicsObjects.pixels)
-                    {
-                        pixel.Draw(_spriteBatch, gameTime);
-                    }
-                    PhysicsObjects.players[0].Draw(_spriteBatch, gameTime);
-                    for (int i = 0; i < PhysicsObjects.projectiles.Count; i++)
-                    {
-                        PhysicsObjects.projectiles[i].Draw(_spriteBatch, gameTime);
-                    }
-                    _spriteBatch.DrawString(font, debugString, new Vector2(200, 200), Color.Black);
-                    break;
-
-                case GameState.Menu:
-                    mainMen.Draw(_spriteBatch);
-                    break;
-
-            }
-            _spriteBatch.End();
-
-            base.Draw(gameTime);
-        }
+        base.Update(gameTime);
     }
+
+    protected override void Draw(GameTime gameTime)
+    {
+        GraphicsDevice.Clear(Color.CornflowerBlue);
+
+        _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, null);
+        _spriteBatch.DrawString(font, "\"WASD\" to move, \"R\" to reset, \"F\" to fire.", new Vector2(600, 500), Color.White);
+        switch (gameState)
+        {
+            case GameState.TerrainCreator:
+                foreach (Pixel pixel in PhysicsObjects.pixels)
+                {
+                    pixel.Draw(_spriteBatch, gameTime);
+                }
+
+                PhysicsObjects.players[0].Draw(_spriteBatch, gameTime);
+                _spriteBatch.DrawString(font, debugString, new Vector2(200, 200), Color.Black);
+
+                break;
+            case GameState.Test:
+                foreach (Pixel pixel in PhysicsObjects.pixels)
+                {
+                    pixel.Draw(_spriteBatch, gameTime);
+                }
+                PhysicsObjects.players[0].Draw(_spriteBatch, gameTime);
+                for (int i = 0; i < PhysicsObjects.projectiles.Count; i++)
+                {
+                    PhysicsObjects.projectiles[i].Draw(_spriteBatch, gameTime);
+                }
+                _spriteBatch.DrawString(font, debugString, new Vector2(200, 200), Color.Black);
+                break;
+
+            case GameState.Menu:
+                mainMen.Draw(_spriteBatch);
+                break;
+
+        }
+        _spriteBatch.End();
+
+        base.Draw(gameTime);
+    }
+}
 }

@@ -168,7 +168,7 @@ namespace PhysicsPixelDestructionGame
             {
                 float distance = (PhysicsObjects.players[i].position - position).Length();
                 Console.WriteLine("Distance from player in pixels: " + distance);
-                distance /= 10; //previously established that 10px = 1m. could scale to 100px = 1m if needed
+                distance /= 100; //previously established that 10px = 1m. could scale to 100px = 1m if needed
                 Console.WriteLine("Distance from player in meters: " + distance);
                 float equiv = TntEquiv[projectileType];
                 Console.WriteLine("TNT Equivalent: " + equiv);
