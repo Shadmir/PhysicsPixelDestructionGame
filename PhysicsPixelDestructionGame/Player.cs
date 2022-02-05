@@ -43,27 +43,6 @@ namespace PhysicsPixelDestructionGame
             playerPicture.Draw(spriteBatch, spriteRectangle, new Rectangle((int)position.X, (int)position.Y, width, height), color);
 
         }
-        public void HandlePlayerCollision(List<Pixel> collidingWith)
-        {
-            if (collidingWith.Count != 0)
-            {
-                Pixel closestPix = collidingWith[0];
-                foreach (var pix in collidingWith)
-                {
-                    Vector2 newDist = new Vector2(pix.position.X - position.X, pix.position.Y - position.Y);
-                    Vector2 currentClosestDist = new Vector2(closestPix.position.X - position.X, closestPix.position.Y - position.Y);
-                    if (Math.Abs(newDist.Length()) < Math.Abs(currentClosestDist.Length()))
-                    {
-                        closestPix = pix;
-                    }
-                }
-                //find how i will collide with this pixel
-                if ()
-                {
-
-                }
-            }
-        }
         public void Damage(float Rg)
         {
             if (Rg > 0.3f)
@@ -151,26 +130,25 @@ namespace PhysicsPixelDestructionGame
                 PhysicsObjects.projectiles.Add(new Projectile(ProjectileType.Nuclear, 1, position, velocity, bombSheet, facing));
             }
             playerFuturePos = new Rectangle((int)(position.X + velocity.X), (int)(position.Y + velocity.Y), width, height);
-            //foreach (Pixel pixel in PhysicsObjects.pixels)
-            //{
-            //    Rectangle pixelPos = new Rectangle((int)pixel.position.X, (int)pixel.position.Y, pixel.width, pixel.height);
-            //    Rectangle playerPos = new Rectangle((int)position.X, (int)position.Y, width, height);
-            //    if (playerPos.Intersects(pixelPos))
-            //    {
+            foreach (Pixel pixel in PhysicsObjects.pixels)
+            {
+                Rectangle pixelPos = new Rectangle((int)pixel.position.X, (int)pixel.position.Y, pixel.width, pixel.height);
+                Rectangle playerPos = new Rectangle((int)position.X, (int)position.Y, width, height);
+                if (playerPos.Intersects(pixelPos))
+                {
 
-            //        //position.X -= 10;
-            //        position.Y -= 10;
-            //    }
-            //    if (playerFuturePos.Intersects(pixelPos))
-            //    {
-            //        //velocity.X = 0;
+                    //position.X -= 10;
+                    position.Y -= 10;
+                }
+                if (playerFuturePos.Intersects(pixelPos))
+                {
+                    //velocity.X = 0;
 
-            //        velocity.Y = 0;
-            //    }
+                    velocity.Y = 0;
+                }
 
-            //    //speculative contact ^
-            //}
-            HandlePlayerCollision(CheckFloorCollision(playerFuturePos));
+                //speculative contact ^
+            }
 
             Move(velocity);
             lastState = keyState;

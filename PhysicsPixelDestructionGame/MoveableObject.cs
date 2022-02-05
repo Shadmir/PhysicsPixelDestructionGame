@@ -31,17 +31,5 @@ namespace PhysicsPixelDestructionGame
         {
             velocity += acceleration;
         }
-        public List<Pixel> CheckFloorCollision(Rectangle futurePos)
-        {
-            List<Pixel> collidingWith = new List<Pixel>();
-            foreach (Pixel target in PhysicsObjects.pixels)
-            {
-                if (futurePos.Intersects(new Rectangle((int)target.position.X, (int)target.position.Y, target.width, target.height)))
-                {
-                    collidingWith.Add(target);
-                }
-            }
-            return collidingWith;
-        }
     }
 }
