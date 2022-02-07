@@ -23,6 +23,7 @@ namespace PhysicsPixelDestructionGame
     // mass slider ??????????
     // damage work properly
     // destructible terrain.
+    //cluster bombs for polymorphism and recursion
 
 /*
  * - switch between p1 and p2 

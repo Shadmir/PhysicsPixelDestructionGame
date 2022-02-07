@@ -78,11 +78,11 @@ namespace PhysicsPixelDestructionGame
                 if (framesAlive - lastFrameJumped > 25 && state == GameState.Playing)
                 {
                     lastFrameJumped = framesAlive;
-                    velocity.Y -= jumpStrength;
+                    Accelerate(new Vector2(0, -jumpStrength));
                 }
-                else
+                else if (state == GameState.Test)
                 {
-                    velocity.Y -= jumpStrength;
+                    Accelerate(new Vector2(0, -jumpStrength));
                 }
             }
             if (keyState.IsKeyDown(Keys.S))

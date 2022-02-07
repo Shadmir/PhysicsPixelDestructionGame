@@ -37,7 +37,7 @@ namespace PhysicsPixelDestructionGame
                     break;
             }
             height *= (int)Math.Pow(mass, 1/2);
-            width *= (int)Math.Pow(mass, 1 / 2);
+            width *= (int)Math.Pow(mass, 1/2);
             switch (projectileType) {
                 case ProjectileType.C4:
                     spritebounds = new Rectangle(0, 0, 15, 15);
