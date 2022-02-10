@@ -9,7 +9,8 @@ using System.Collections.Generic;
 namespace PhysicsPixelDestructionGame
 {
     //size of player spritesheet is 10x40
-    //TODO: make the player check for collisions by using the new collision method in the MoveableObject class.
+    // change angle of launch with left/right, change power with up/down, make a new object displaying current selected ProjectileType, power, hp, angle follow the player around.
+    //shouldn't be too hard
     class Player : MoveableObject
     {
         private Direction facing = Direction.Right;
