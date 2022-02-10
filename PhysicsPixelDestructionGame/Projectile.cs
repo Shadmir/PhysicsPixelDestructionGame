@@ -164,20 +164,31 @@ namespace PhysicsPixelDestructionGame
         }
         public void Explode(SoundEffect boom)
         {
+            float equiv = TntEquiv[projectileType];
+            float Rg;
             for (int i = 0; i < PhysicsObjects.players.Count; i++)
             {
                 float distance = (PhysicsObjects.players[i].position - position).Length();
                 Console.WriteLine("Distance from player in pixels: " + distance);
                 distance /= 100; //previously established that 10px = 1m. could scale to 100px = 1m if needed
                 Console.WriteLine("Distance from player in meters: " + distance);
-                float equiv = TntEquiv[projectileType];
+
                 Console.WriteLine("TNT Equivalent: " + equiv);
-                float Rg = distance / (float)Math.Pow((double)equiv, (double)1.0 / 3.0);
+                Rg = distance / (float)Math.Pow((double)equiv, (double)1.0 / 3.0);
+                
                 Console.WriteLine("RG: " + Rg);
                 PhysicsObjects.players[i].Damage(Rg);
-                boom.Play();
-                exploded = true;
+                
             }
+            foreach (Pixel pixel in PhysicsObjects.pixels)
+            {
+                float distance = (pixel.position - position).Length();
+                distance /= 100;
+                Rg = distance / (float)Math.Pow((double)equiv, (double)1.0 / 3.0);
+                pixel.Damage(Rg);
+            }
+            exploded = true;
+            boom.Play();
         }
     }
 }

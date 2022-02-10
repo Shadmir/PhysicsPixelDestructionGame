@@ -21,7 +21,7 @@ namespace PhysicsPixelDestructionGame
             mouseState = Mouse.GetState();
             if (113 <= mouseState.X && 322 >= mouseState.X && 131 <= mouseState.Y && 336 >= mouseState.Y && mouseState.LeftButton == ButtonState.Pressed)
             {
-                return GameState.Test;
+                return GameState.Playing;
             }
             return GameState.Menu;
         }

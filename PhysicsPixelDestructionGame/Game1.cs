@@ -9,27 +9,25 @@ using System.IO;
 
 namespace PhysicsPixelDestructionGame
 {
+    //HELLO SIR
+    //THIS IS VERY CLOSE TO BEING DONE, PROBABLY CLOSER THAN THE TODO MAKES IT LOOK
+    // I KNOW HOW I WANT TO DO EVERYTHING, I JUST NEED TO PUT CODE TO PAPER
+
+
     //TODO: 
-    //playing gamestate
-    //- add logic to check if pixels are connected to the edge so they can fall off
     //- ^^^^ checking if they want to fall
+    //refactor rest of movable objects to use proper movement methods
     //- Documented design
-    //- Finish analysis properly
-    //- Turn-based gameplay
     // making the projectile path simulated before the projectile fires
     // power slider
     // change the angle
     // change the  projectile you can shoot
     // mass slider ??????????
-    // damage work properly
-    // destructible terrain.
+    // damage work properly ???? possibly done
     //cluster bombs for polymorphism and recursion
-
-    /*
-     * - switch between p1 and p2 
+    /* 
     - move players with f=ma when they get hit by an explosion
     - destructible terrain
-    - 
     */
     public enum ProjectileType
     {
@@ -60,6 +58,7 @@ namespace PhysicsPixelDestructionGame
         private SpriteBatch _spriteBatch;
         private int pixelsMade = 0;
         private KeyboardState keyState = new KeyboardState();
+        private KeyboardState lastState = new KeyboardState();
         private MouseState mouseState = new MouseState();
         private Vector2 mousePosVect;
         private Texture2D whitePixel;
@@ -69,6 +68,7 @@ namespace PhysicsPixelDestructionGame
         private Player player1;
         private Player player2;
         private Menu mainMen;
+        private List<int> pixelIDsToRemove = new List<int>();
         public Texture2D bombs;
         public Song toLoop;
         public SoundEffect boom;
@@ -152,6 +152,7 @@ namespace PhysicsPixelDestructionGame
                 Exit();
             }
             mouseState = Mouse.GetState();
+            lastState = keyState;
             keyState = Keyboard.GetState();
             mousePosVect = new Vector2(mouseState.X, mouseState.Y);
             bool colliding = false;
@@ -226,20 +227,40 @@ namespace PhysicsPixelDestructionGame
                     if (playerTurn % 2 != 0)
                     {
                         PhysicsObjects.players[0].Update(gameTime, boom, gameState);
-                        if (keyState.IsKeyDown(Keys.Enter))
+                        UpdateProjectiles(gameTime);
+                        if (keyState.IsKeyDown(Keys.Enter) && lastState != keyState)
                         {
                             playerTurn++;
                         }
                     }
                     else if (playerTurn % 2 == 0)
                     {
-                        PhysicsObjects.players[0].Update(gameTime, boom, gameState);
-                        if (keyState.IsKeyDown(Keys.Enter))
+                        PhysicsObjects.players[1].Update(gameTime, boom, gameState);
+                        UpdateProjectiles(gameTime);
+                        if (keyState.IsKeyDown(Keys.Enter) && lastState != keyState)
                         {
                             foreach (Projectile projectile in PhysicsObjects.projectiles)
                             {
                                 projectile.Explode(boom);
                             }
+                            foreach (Pixel pixel in PhysicsObjects.pixels)
+                            {
+                                if (pixel.health <= 0)
+                                {
+                                    pixelIDsToRemove.Add(pixel.pixelID);
+                                }
+                            }
+                            for (int i = 0; i < PhysicsObjects.pixels.Count; i++)
+                            {
+                                foreach (int id in pixelIDsToRemove)
+                                {
+                                    if (PhysicsObjects.pixels[i].pixelID == id)
+                                    {
+                                        PhysicsObjects.pixels.RemoveAt(i);
+                                    }
+                                }
+                            }
+                            RemoveProjectiles();
                             while (PhysicsObjects.players[0].velocity.Length() != 0 && PhysicsObjects.players[1].velocity.Length() != 0)
                             {
                                 foreach (Player player in PhysicsObjects.players)
@@ -247,9 +268,9 @@ namespace PhysicsPixelDestructionGame
                                     player.Update(gameTime, boom, gameState);
                                 }
                             }
+                            playerTurn++;
                         }
                     }
-                    // need to make it so bombs go off after player 2 turn
 
                     break;
 
@@ -257,9 +278,25 @@ namespace PhysicsPixelDestructionGame
                     break;
             }
             // TODO: Add your update logic here
-
-
             base.Update(gameTime);
+        }
+        protected void UpdateProjectiles(GameTime gameTime)
+        {
+            foreach (Projectile projectile in PhysicsObjects.projectiles)
+            {
+                projectile.Update(gameTime);
+            }
+        }
+
+        protected void RemoveProjectiles()
+        {
+            for (int i = 0; i < PhysicsObjects.projectiles.Count; i++)
+            {
+                if (PhysicsObjects.projectiles[i].exploded)
+                {
+                    PhysicsObjects.projectiles.RemoveAt(i);
+                }
+            }
         }
 
         protected override void Draw(GameTime gameTime)
@@ -299,6 +336,7 @@ namespace PhysicsPixelDestructionGame
                         pixel.Draw(_spriteBatch, gameTime);
                     }
                     PhysicsObjects.players[0].Draw(_spriteBatch, gameTime);
+                    PhysicsObjects.players[1].Draw(_spriteBatch, gameTime);
                     for (int i = 0; i < PhysicsObjects.projectiles.Count; i++)
                     {
                         PhysicsObjects.projectiles[i].Draw(_spriteBatch, gameTime);
