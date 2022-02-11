@@ -284,7 +284,15 @@ namespace PhysicsPixelDestructionGame
         {
             foreach (Projectile projectile in PhysicsObjects.projectiles)
             {
-                projectile.Update(gameTime);
+                if (projectile.exploded != true)
+                {
+                    projectile.Update(gameTime);
+                }
+                else 
+                {
+                    PhysicsObjects.projectiles.Remove(projectile);
+                }
+
             }
         }
 
