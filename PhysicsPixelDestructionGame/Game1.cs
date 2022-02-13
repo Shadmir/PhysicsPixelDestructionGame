@@ -14,6 +14,10 @@ namespace PhysicsPixelDestructionGame
     // I KNOW HOW I WANT TO DO EVERYTHING, I JUST NEED TO PUT CODE TO PAPER
 
 
+    // UPDATE 13/2/22. I was going to finish coding this weekend but my dad instead decided i must spend the weekend replumbing
+    // the central heating -_-
+
+
     //TODO: 
     //- ^^^^ checking if they want to fall
     //refactor rest of movable objects to use proper movement methods
