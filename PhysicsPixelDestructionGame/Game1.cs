@@ -29,6 +29,7 @@ namespace PhysicsPixelDestructionGame
     // mass slider ??????????
     // damage work properly ???? possibly done
     //cluster bombs for polymorphism and recursion
+    // make a class to contain the menu that needs to follow the player around.
     /* 
     - move players with f=ma when they get hit by an explosion
     - destructible terrain
