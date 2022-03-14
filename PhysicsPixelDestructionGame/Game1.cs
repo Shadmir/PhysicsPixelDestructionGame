@@ -14,13 +14,7 @@ namespace PhysicsPixelDestructionGame
     // I KNOW HOW I WANT TO DO EVERYTHING, I JUST NEED TO PUT CODE TO PAPER
 
 
-    // UPDATE 13/2/22. I was going to finish coding this weekend but my dad instead decided i must spend the weekend replumbing
-    // the central heating -_-
-
-
     //TODO: 
-    //- ^^^^ checking if they want to fall
-    //refactor rest of movable objects to use proper movement methods
     //- Documented design
     // making the projectile path simulated before the projectile fires
     // power slider
@@ -29,10 +23,8 @@ namespace PhysicsPixelDestructionGame
     // mass slider ??????????
     // damage work properly ???? possibly done
     //cluster bombs for polymorphism and recursion
-    /* 
-    - move players with f=ma when they get hit by an explosion
-    - destructible terrain
-    */
+    //- move players with f=ma when they get hit by an explosion
+
     public enum ProjectileType
     {
         C4,
@@ -103,11 +95,13 @@ namespace PhysicsPixelDestructionGame
             bombs = Content.Load<Texture2D>("bombSprites");
             whitePixel = Content.Load<Texture2D>("whitePixel");
             playerTexture = Content.Load<Texture2D>("playerSheet");
-            player1 = new Player(playerTexture, bombs);
-            player2 = new Player(playerTexture, bombs);
+            font = Content.Load<SpriteFont>("font");
+            player1 = new Player(playerTexture, bombs, font, whitePixel);
+            player2 = new Player(playerTexture, bombs, font, whitePixel);
             PhysicsObjects.players.Add(player1);
             PhysicsObjects.players.Add(player2);
-            font = Content.Load<SpriteFont>("font");
+            PhysicsObjects.players[1].position = new Vector2(1800, 115);
+            PhysicsObjects.players[1].facing = Direction.Left;
             menu = Content.Load<Texture2D>("menu");
             toLoop = Content.Load<Song>("ShadmirGameSong");
             boom = Content.Load<SoundEffect>("Explosion");
@@ -231,6 +225,8 @@ namespace PhysicsPixelDestructionGame
                     if (playerTurn % 2 != 0)
                     {
                         PhysicsObjects.players[0].Update(gameTime, boom, gameState);
+                        PhysicsObjects.players[0].statsBoard.showing = true;
+                        PhysicsObjects.players[1].statsBoard.showing = false;
                         UpdateProjectiles(gameTime);
                         if (keyState.IsKeyDown(Keys.Enter) && lastState != keyState)
                         {
@@ -240,6 +236,8 @@ namespace PhysicsPixelDestructionGame
                     else if (playerTurn % 2 == 0)
                     {
                         PhysicsObjects.players[1].Update(gameTime, boom, gameState);
+                        PhysicsObjects.players[1].statsBoard.showing = true;
+                        PhysicsObjects.players[0].statsBoard.showing = false;
                         UpdateProjectiles(gameTime);
                         if (keyState.IsKeyDown(Keys.Enter) && lastState != keyState)
                         {
