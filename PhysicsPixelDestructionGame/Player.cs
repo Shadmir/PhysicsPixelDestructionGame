@@ -9,7 +9,7 @@ using System.Collections.Generic;
 namespace PhysicsPixelDestructionGame
 {
     //size of player spritesheet is 10x40
-    // change angle of launch with left/right, change power with up/down, make a new object displaying current selected ProjectileType, power, hp, angle follow the player around.
+    //change angle of launch with left/right, change power with up/down, make a new object displaying current selected ProjectileType, power, hp, angle follow the player around.
     //shouldn't be too hard
     class Player : MoveableObject
     {
@@ -161,14 +161,21 @@ namespace PhysicsPixelDestructionGame
             {
                 launchPower++;
             }
-            if (keyState.IsKeyDown(Keys.C))
+            if (keyState.IsKeyDown(Keys.C) && lastState != keyState)
             {
                 makeCluster = !makeCluster;
             }
 
             if(keyState.IsKeyDown(Keys.F) && lastState != keyState)
             {
-
+                if (!makeCluster)
+                {
+                    //normal shot
+                }
+                else
+                {
+                    //cluster shot
+                }
             }
             if (keyState.IsKeyDown(Keys.R))
             {
