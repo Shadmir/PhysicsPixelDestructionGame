@@ -7,11 +7,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
+
 namespace PhysicsPixelDestructionGame
 {
-    //TODO: 
-    // projectile vectors
-    //projectiles are very very broken ----- just manipulate a vector in the player class???????/
     public enum ProjectileType
     {
         C4,
@@ -57,9 +55,8 @@ namespace PhysicsPixelDestructionGame
         public Song toLoop;
         public SoundEffect boom;
         public int playerTurn = 1;
-        public GameState gameState { get; private set; } = GameState.Menu;
+        public GameState gameState = GameState.Menu;
         private string debugString = "";
-        private bool won = false;
         private int winner = 0;
 
         public Game1()
@@ -215,6 +212,7 @@ namespace PhysicsPixelDestructionGame
                     if (playerTurn % 2 != 0)
                     {
                         PhysicsObjects.players[0].Update(gameTime, boom, gameState);
+                        PhysicsObjects.players[1].UpdatePhysics(gameTime);
                         PhysicsObjects.players[0].statsBoard.showing = true;
                         PhysicsObjects.players[1].statsBoard.showing = false;
                         UpdateProjectiles(gameTime);
@@ -226,6 +224,7 @@ namespace PhysicsPixelDestructionGame
                     else if (playerTurn % 2 == 0)
                     {
                         PhysicsObjects.players[1].Update(gameTime, boom, gameState);
+                        PhysicsObjects.players[0].UpdatePhysics(gameTime);
                         PhysicsObjects.players[1].statsBoard.showing = true;
                         PhysicsObjects.players[0].statsBoard.showing = false;
                         UpdateProjectiles(gameTime);
@@ -265,19 +264,16 @@ namespace PhysicsPixelDestructionGame
                     }
                     if(player1.health <= 0 && player2.health > 0)
                     {
-                        won = true;
                         winner = 2;
                         gameState = GameState.Won;
                     }
                     if (player2.health <= 0 && player1.health > 0)
                     {
-                        won = true;
                         winner = 1;
                         gameState = GameState.Won;
                     }
                     if (player2.health <= 0 && player1.health <= 0)
                     {
-                        won = true;
                         winner = 3;
                         gameState = GameState.Won;
                     }

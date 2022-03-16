@@ -70,6 +70,27 @@ namespace PhysicsPixelDestructionGame
             health -= 10*pressure;
 
         }
+        public void UpdatePhysics(GameTime gameTime)
+        {
+            Accelerate(new Vector2(0, 1));
+            playerFuturePos = new Rectangle((int)(position.X + velocity.X), (int)(position.Y + velocity.Y), width, height);
+            foreach (Pixel pixel in PhysicsObjects.pixels)
+            {
+                Rectangle pixelPos = new Rectangle((int)pixel.position.X, (int)pixel.position.Y, pixel.width, pixel.height);
+                Rectangle playerPos = new Rectangle((int)position.X, (int)position.Y, width, height);
+                if (playerPos.Intersects(pixelPos))
+                {
+                    position.Y -= 10;
+                }
+                if (playerFuturePos.Intersects(pixelPos))
+                {
+                    velocity.Y = 0;
+                }
+                //speculative contact ^
+            }
+
+            Move(velocity);
+        }
         public void Update(GameTime gameTime, SoundEffect boom, GameState state)
         {
             statsBoard.Update(position, health, launchType, launchMass, launchPower, launchAngle, makeCluster, launchVel);
@@ -111,17 +132,6 @@ namespace PhysicsPixelDestructionGame
             if (keyState.IsKeyUp(Keys.A) && keyState.IsKeyUp(Keys.D))
             {
                 SetVel(new Vector2(0, velocity.Y));
-            }
-            if (keyState.IsKeyDown(Keys.B) && framesAlive - lastExplosion > 25)
-            {
-                lastExplosion = framesAlive;
-                if (PhysicsObjects.projectiles.Count > 0)
-                {
-                    for (int i = 0; i < PhysicsObjects.projectiles.Count; i++)
-                    {
-                        PhysicsObjects.projectiles[i].Explode(boom);
-                    }
-                }
             }
             if (keyState.IsKeyDown(Keys.Q) && lastState != keyState)
             {
@@ -194,25 +204,7 @@ namespace PhysicsPixelDestructionGame
                 Teleport(new Vector2(0, 0));
                 SetVel(new Vector2(0, 0));
             }
-            Accelerate(new Vector2(0, 1));
-            //new projectile launching logic
-            playerFuturePos = new Rectangle((int)(position.X + velocity.X), (int)(position.Y + velocity.Y), width, height);
-            foreach (Pixel pixel in PhysicsObjects.pixels)
-            {
-                Rectangle pixelPos = new Rectangle((int)pixel.position.X, (int)pixel.position.Y, pixel.width, pixel.height);
-                Rectangle playerPos = new Rectangle((int)position.X, (int)position.Y, width, height);
-                if (playerPos.Intersects(pixelPos))
-                {
-                    position.Y -= 10;
-                }
-                if (playerFuturePos.Intersects(pixelPos))
-                {
-                    velocity.Y = 0;
-                }
-                //speculative contact ^
-            }
-
-            Move(velocity);
+            UpdatePhysics(gameTime);
             lastState = keyState;
         }
     }
