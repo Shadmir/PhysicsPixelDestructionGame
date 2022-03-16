@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Audio;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 
 namespace PhysicsPixelDestructionGame
@@ -21,7 +22,7 @@ namespace PhysicsPixelDestructionGame
         public Sprite playerPicture;
         public Texture2D bombSheet;
         public ProjectileType launchType = ProjectileType.C4;
-        public int launchMass = 0;
+        public int launchMass = 1;
         public int launchAngle = 0;
         public int launchPower = 0;
         public bool makeCluster = false;
@@ -128,12 +129,12 @@ namespace PhysicsPixelDestructionGame
                 {
                     launchType = ProjectileType.C4;
                 }
-            } 
-            if (keyState.IsKeyDown(Keys.PageUp))
+            }
+            if (keyState.IsKeyDown(Keys.PageUp) && launchMass < 10)
             {
                 launchMass++;
             }
-            if (keyState.IsKeyDown(Keys.PageDown) && launchMass > 0)
+            if (keyState.IsKeyDown(Keys.PageDown) && launchMass > 1)
             {
                 launchMass--;   
             }
@@ -168,14 +169,19 @@ namespace PhysicsPixelDestructionGame
 
             if(keyState.IsKeyDown(Keys.F) && lastState != keyState)
             {
+                /*
                 if (!makeCluster)
                 {
-                    //normal shot
+                    PhysicsObjects.projectiles.Add(new Projectile(launchType, launchMass, position, velocity, bombSheet, facing, launchAngle, launchPower));
+                    
                 }
                 else
                 {
-                    //cluster shot
+                    PhysicsObjects.projectiles.Add(new ClusterProjectile(launchType, launchMass, position, velocity, bombSheet, facing, launchAngle, launchPower));
                 }
+                */
+                PhysicsObjects.projectiles.Add(new Projectile(ProjectileType.Nuclear, 1, position, velocity, bombSheet, facing, 90, 1));
+                Debug.WriteLine("Making projectile");
             }
             if (keyState.IsKeyDown(Keys.R))
             {

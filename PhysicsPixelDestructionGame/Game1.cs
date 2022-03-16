@@ -9,22 +9,9 @@ using System.IO;
 
 namespace PhysicsPixelDestructionGame
 {
-    //HELLO SIR
-    //THIS IS VERY CLOSE TO BEING DONE, PROBABLY CLOSER THAN THE TODO MAKES IT LOOK
-    // I KNOW HOW I WANT TO DO EVERYTHING, I JUST NEED TO PUT CODE TO PAPER
-
-
     //TODO: 
-    //- Documented design
-    // making the projectile path simulated before the projectile fires
-    // power slider
-    // change the angle
-    // change the  projectile you can shoot
-    // mass slider ??????????
-    // damage work properly ???? possibly done
-    //cluster bombs for polymorphism and recursion
-    //- move players with f=ma when they get hit by an explosion
-
+    // projectile vectors
+    //projectiles are very very broken
     public enum ProjectileType
     {
         C4,
@@ -71,6 +58,7 @@ namespace PhysicsPixelDestructionGame
         public int playerTurn = 1;
         public GameState gameState { get; private set; } = GameState.Menu;
         private string debugString = "";
+        private bool won = false;
 
         public Game1()
         {
@@ -273,7 +261,31 @@ namespace PhysicsPixelDestructionGame
                             playerTurn++;
                         }
                     }
-
+                    if(player1.health <= 0 && player2.health > 0)
+                    {
+                        debugString = "Player 2 wins!";
+                        PhysicsObjects.players.RemoveAt(1);
+                        won = true;
+                        System.Threading.Thread.Sleep(5000);
+                        Environment.Exit(0);
+                    }
+                    if (player2.health <= 0 && player1.health > 0)
+                    {
+                        debugString = "Player 1 wins!";
+                        PhysicsObjects.players.RemoveAt(0);
+                        won = true;
+                        System.Threading.Thread.Sleep(5000);
+                        Environment.Exit(0);
+                    }
+                    if (player2.health <= 0 && player1.health <= 0)
+                    {
+                        debugString = "Draw!";
+                        PhysicsObjects.players.RemoveAt(0);
+                        PhysicsObjects.players.RemoveAt(1);
+                        won = true;
+                        System.Threading.Thread.Sleep(5000);
+                        Environment.Exit(0);
+                    }
                     break;
 
                 default:
@@ -351,7 +363,10 @@ namespace PhysicsPixelDestructionGame
                     {
                         PhysicsObjects.projectiles[i].Draw(_spriteBatch, gameTime);
                     }
-                    _spriteBatch.DrawString(font, debugString, new Vector2(200, 200), Color.Black);
+                    if (won)
+                    {
+                        _spriteBatch.DrawString(font, debugString, new Vector2(200, 200), Color.Black);
+                    }
                     break;
 
                 case GameState.Menu:
