@@ -13,11 +13,9 @@ namespace PhysicsPixelDestructionGame
     {
         Direction initDirection;
         int angle, power;
-        public ClusterProjectile (ProjectileType type, int Mass, Vector2 Pos, Vector2 Vel, Texture2D sheet, Direction initDir, int initAngle, int initPower) : base(type, Mass, Pos, Vel, sheet, initDir, initAngle, initPower)
+        public ClusterProjectile (ProjectileType type, int Mass, Vector2 Pos, Vector2 Vel, Texture2D sheet, Direction initDir, Vector2 launchVel) : base(type, Mass, Pos, Vel, sheet, initDir, launchVel)
         {
             initDirection = initDir;
-            angle = initAngle;
-            power = initPower;
         }
         public override void Explode(SoundEffect boom)
         {
@@ -26,15 +24,13 @@ namespace PhysicsPixelDestructionGame
         }
         private void Split(SoundEffect boom)
         {
+            mass /= 2;
             if (mass >= 1)
             {
                 Split(boom);
+                Explode(boom);
             }
-            for (int i = 0; i < 2; i++)
-            {
-                ClusterProjectile child = new ClusterProjectile(projectileType, mass, position, velocity, projectile.Texture, initDirection, angle, power);
-                child.Explode(boom);
-            }
+
         }
     }
 }

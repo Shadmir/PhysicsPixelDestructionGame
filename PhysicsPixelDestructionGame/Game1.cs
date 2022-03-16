@@ -33,7 +33,8 @@ namespace PhysicsPixelDestructionGame
         TerrainCreator,
         Test,
         Menu,
-        Playing
+        Playing,
+        Won
     }
     public class Game1 : Game
     {
@@ -59,6 +60,7 @@ namespace PhysicsPixelDestructionGame
         public GameState gameState { get; private set; } = GameState.Menu;
         private string debugString = "";
         private bool won = false;
+        private int winner = 0;
 
         public Game1()
         {
@@ -263,31 +265,32 @@ namespace PhysicsPixelDestructionGame
                     }
                     if(player1.health <= 0 && player2.health > 0)
                     {
-                        debugString = "Player 2 wins!";
-                        PhysicsObjects.players.RemoveAt(1);
                         won = true;
-                        System.Threading.Thread.Sleep(5000);
-                        Environment.Exit(0);
+                        winner = 2;
+                        gameState = GameState.Won;
                     }
                     if (player2.health <= 0 && player1.health > 0)
                     {
-                        debugString = "Player 1 wins!";
-                        PhysicsObjects.players.RemoveAt(0);
                         won = true;
-                        System.Threading.Thread.Sleep(5000);
-                        Environment.Exit(0);
+                        winner = 1;
+                        gameState = GameState.Won;
                     }
                     if (player2.health <= 0 && player1.health <= 0)
                     {
-                        debugString = "Draw!";
-                        PhysicsObjects.players.RemoveAt(0);
-                        PhysicsObjects.players.RemoveAt(1);
                         won = true;
-                        System.Threading.Thread.Sleep(5000);
-                        Environment.Exit(0);
+                        winner = 3;
+                        gameState = GameState.Won;
                     }
                     break;
 
+                case GameState.Won:
+                    System.Threading.Thread.Sleep(10000);
+                    PhysicsObjects.players = new List<Player>();
+                    PhysicsObjects.pixels = new List<Pixel>();
+                    PhysicsObjects.projectiles = new List<Projectile>();
+                    LoadContent();
+                    gameState = GameState.Menu;
+                    break;
                 default:
                     break;
             }
@@ -302,11 +305,6 @@ namespace PhysicsPixelDestructionGame
                 {
                     projectile.Update(gameTime);
                 }
-                else 
-                {
-                    PhysicsObjects.projectiles.Remove(projectile);
-                }
-
             }
         }
 
@@ -326,7 +324,6 @@ namespace PhysicsPixelDestructionGame
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, null);
-            _spriteBatch.DrawString(font, "\"WASD\" to move, \"R\" to reset, \"F\" to fire.", new Vector2(600, 500), Color.White);
             switch (gameState)
             {
                 case GameState.TerrainCreator:
@@ -353,6 +350,7 @@ namespace PhysicsPixelDestructionGame
                     break;
 
                 case GameState.Playing:
+                    _spriteBatch.DrawString(font, "\"WASD\" to move, \"R\" to reset, \"F\" to fire, \"Q\" & \"E\" to switch projectile type, up, down, left, right, pgup, pgdwn to change launch.", new Vector2(600, 550), Color.White);
                     foreach (Pixel pixel in PhysicsObjects.pixels)
                     {
                         pixel.Draw(_spriteBatch, gameTime);
@@ -363,16 +361,29 @@ namespace PhysicsPixelDestructionGame
                     {
                         PhysicsObjects.projectiles[i].Draw(_spriteBatch, gameTime);
                     }
-                    if (won)
-                    {
-                        _spriteBatch.DrawString(font, debugString, new Vector2(200, 200), Color.Black);
-                    }
                     break;
 
                 case GameState.Menu:
                     mainMen.Draw(_spriteBatch);
                     break;
 
+                case GameState.Won:
+                    GraphicsDevice.Clear(new Color(184, 51, 73));
+                    string toWrite = "The winner is: ";
+                    if(winner == 1)
+                    {
+                        toWrite += "player 1!";
+                    }
+                    if (winner == 2)
+                    {
+                        toWrite += "player 2!";
+                    }
+                    if (winner == 3)
+                    {
+                        toWrite += "both!";
+                    }
+                    _spriteBatch.DrawString(font, toWrite, new Vector2(500, 500), Color.White);
+                    break;
             }
             _spriteBatch.End();
 

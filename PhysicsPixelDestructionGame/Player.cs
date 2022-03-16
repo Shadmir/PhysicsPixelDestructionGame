@@ -24,7 +24,7 @@ namespace PhysicsPixelDestructionGame
         public ProjectileType launchType = ProjectileType.C4;
         public int launchMass = 1;
         public int launchAngle = 0;
-        public int launchPower = 0;
+        public int launchPower = 1;
         public bool makeCluster = false;
         public Rectangle playerFuturePos;
         public Rectangle spriteRectangle = new Rectangle(0, 0, 20, 10);
@@ -33,6 +33,7 @@ namespace PhysicsPixelDestructionGame
         public int jumpStrength = 10;
         public Color color = Color.White;
         public PlayerStatistics statsBoard;
+        public Vector2 launchVel = new Vector2((float)Math.Sqrt(2)/2, (float)Math.Sqrt(2)/2);
         public Player(Texture2D texture, Texture2D bombs, SpriteFont f, Texture2D wp)
         {
             health = 100f;
@@ -66,12 +67,12 @@ namespace PhysicsPixelDestructionGame
             {
                 pressure = 0.065f / Rg + 0.397f / (float)Math.Pow(Rg, 2) + 0.322f / (float)Math.Pow(Rg, 3);
             }
-            health -= pressure;
+            health -= 10*pressure;
 
         }
         public void Update(GameTime gameTime, SoundEffect boom, GameState state)
         {
-            statsBoard.Update(position, health, launchType, launchMass, launchPower, launchAngle, makeCluster);
+            statsBoard.Update(position, health, launchType, launchMass, launchPower, launchAngle, makeCluster, launchVel);
             framesAlive++;
             keyState = Keyboard.GetState();
             mouse = Mouse.GetState();
@@ -125,10 +126,10 @@ namespace PhysicsPixelDestructionGame
             if (keyState.IsKeyDown(Keys.Q) && lastState != keyState)
             {
                 launchType++;
-                if (launchType == ProjectileType.HolyHandGrenade)
-                {
-                    launchType = ProjectileType.C4;
-                }
+            }
+            if (keyState.IsKeyDown(Keys.E) && lastState != keyState)
+            {
+                launchType--;
             }
             if (keyState.IsKeyDown(Keys.PageUp) && launchMass < 10)
             {
@@ -136,7 +137,7 @@ namespace PhysicsPixelDestructionGame
             }
             if (keyState.IsKeyDown(Keys.PageDown) && launchMass > 1)
             {
-                launchMass--;   
+                launchMass--;
             }
             if (keyState.IsKeyDown(Keys.Up))
             {
@@ -145,6 +146,9 @@ namespace PhysicsPixelDestructionGame
                 {
                     launchAngle = 0;
                 }
+                launchVel = new Vector2((float)(launchVel.X * Math.Cos(Math.PI / 180) + launchVel.Y * -1 * Math.Sin(Math.PI / 180)), (float)(launchVel.X * Math.Sin(Math.PI / 180) + launchVel.Y * Math.Cos(Math.PI / 180)));
+
+                //perform matrix transformation on vector by ONE DEGREE
             }
             if (keyState.IsKeyDown(Keys.Down))
             {
@@ -153,35 +157,37 @@ namespace PhysicsPixelDestructionGame
                 {
                     launchAngle = 359;
                 }
+                //perform matrix transformation on vector by one degree the other way
+                launchVel = new Vector2((float)(launchVel.X * Math.Cos(-Math.PI / 180) + launchVel.Y * -1 * Math.Sin(-Math.PI / 180)), (float)(launchVel.X * Math.Sin(-Math.PI / 180) + launchVel.Y * Math.Cos(-Math.PI / 180)));
             }
-            if(keyState.IsKeyDown(Keys.Left) && launchPower > 0)
+            if (keyState.IsKeyDown(Keys.Left) && launchPower > 1)
             {
                 launchPower--;
+                launchVel = new Vector2(launchPower * launchVel.X / launchVel.Length(), launchPower * launchVel.Y / launchVel.Length());
             }
             if (keyState.IsKeyDown(Keys.Right) && launchPower < 100)
             {
                 launchPower++;
+                launchVel = new Vector2(launchPower * launchVel.X / launchVel.Length(), launchPower * launchVel.Y / launchVel.Length());
             }
             if (keyState.IsKeyDown(Keys.C) && lastState != keyState)
             {
                 makeCluster = !makeCluster;
             }
 
-            if(keyState.IsKeyDown(Keys.F) && lastState != keyState)
+            if (keyState.IsKeyDown(Keys.F) && lastState != keyState)
             {
-                /*
+
                 if (!makeCluster)
                 {
-                    PhysicsObjects.projectiles.Add(new Projectile(launchType, launchMass, position, velocity, bombSheet, facing, launchAngle, launchPower));
-                    
+                    PhysicsObjects.projectiles.Add(new Projectile(launchType, launchMass, position, velocity, bombSheet, facing, launchVel));
+
                 }
                 else
                 {
-                    PhysicsObjects.projectiles.Add(new ClusterProjectile(launchType, launchMass, position, velocity, bombSheet, facing, launchAngle, launchPower));
+                    PhysicsObjects.projectiles.Add(new ClusterProjectile(launchType, launchMass, position, velocity, bombSheet, facing, launchVel));
                 }
-                */
-                PhysicsObjects.projectiles.Add(new Projectile(ProjectileType.Nuclear, 1, position, velocity, bombSheet, facing, 90, 1));
-                Debug.WriteLine("Making projectile");
+
             }
             if (keyState.IsKeyDown(Keys.R))
             {
@@ -208,11 +214,6 @@ namespace PhysicsPixelDestructionGame
 
             Move(velocity);
             lastState = keyState;
-        }
-        private void LaunchProjectile()
-        {
-            Projectile launchProj = new Projectile(launchType, launchMass, position, velocity, bombSheet, facing, launchAngle, launchPower);
-            PhysicsObjects.projectiles.Add(launchProj);
         }
     }
 }

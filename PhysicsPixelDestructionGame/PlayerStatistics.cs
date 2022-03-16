@@ -21,6 +21,8 @@ namespace PhysicsPixelDestructionGame
         public Vector2 position;
         public Vector2 backgroundSize;
         public Rectangle bombSpritePosition;
+        public Vector2 launchPreview;
+        public Vector2 iPos;
 
         public PlayerStatistics(SpriteFont f, Texture2D b, Texture2D wp)
         {
@@ -34,10 +36,11 @@ namespace PhysicsPixelDestructionGame
             whitePixel = new Sprite(wp);
             backgroundSize = new Vector2(300, 200);
             position = new Vector2(0, 0);
+            
             currentHealth = 0f;
         }
 
-        public void Update(Vector2 inputPos, float hp, ProjectileType proj, int mass, int power, int angle, bool c)
+        public void Update(Vector2 inputPos, float hp, ProjectileType proj, int mass, int power, int angle, bool c, Vector2 launchVel)
         {
             position = inputPos - new Vector2(0, backgroundSize.Y + 10);
             currentHealth = hp;
@@ -46,6 +49,8 @@ namespace PhysicsPixelDestructionGame
             currentPower = power;
             currentAngle = angle;
             cluster = c;
+            launchPreview = new Vector2(3 * power * launchVel.X / launchVel.Length(), 3 * power * launchVel.Y / launchVel.Length());
+            iPos = inputPos;
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -61,6 +66,7 @@ namespace PhysicsPixelDestructionGame
                 {
                     whitePixel.Draw(spriteBatch, position + new Vector2(10, 10), new Vector2(10, 10), Color.Red);
                 }
+                whitePixel.Draw(spriteBatch, iPos + launchPreview, new Vector2(5, 5), new Color(255, 0, 255));
                 switch (currentSelectedType)
                 {
                     case ProjectileType.C4:

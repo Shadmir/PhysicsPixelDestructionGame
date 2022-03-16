@@ -20,10 +20,10 @@ namespace PhysicsPixelDestructionGame
         public int mass;
         private bool colliding = false;
 
-        public Projectile(ProjectileType type, int Mass, Vector2 Pos, Vector2 Vel, Texture2D sheet, Direction initDir, int angle, int power)
+        public Projectile(ProjectileType type, int Mass, Vector2 Pos, Vector2 Vel, Texture2D sheet, Direction initDir, Vector2 launchVec)
         {
-            width = 15 * (int)Math.Pow(mass, 0.5);
-            height = 15 * (int)Math.Pow(mass, 0.5);
+            width = (int)(15 * Math.Sqrt(Mass));
+            height = (int)(15 * Math.Sqrt(Mass));
             projectileType = type;
             projectile = new Sprite(sheet);
             mass = Mass;
@@ -31,15 +31,7 @@ namespace PhysicsPixelDestructionGame
             velocity = Vel;
             // need to add logic to launch projectile at correct angle with overall magnitude of 10root2
             //to do this, take each component of the vector, divide by magnitude of overall vector, and times by 10root2
-            double xComponent = (1 / 100) * 10 *Math.Pow(2, 0.5) * power * Math.Cos((Math.PI * angle) / 180);
-            double yComponent = (1 / 100) * 10 * Math.Pow(2, 0.5) * power * Math.Sin((Math.PI * angle) / 180);
-            if(initDir == Direction.Left)
-            {
-                xComponent = -xComponent;
-            }
-            velocity += new Vector2((float)xComponent, (float)yComponent);
-            height *= (int)Math.Pow(mass, 1 / 2);
-            width *= (int)Math.Pow(mass, 1 / 2);
+            velocity += launchVec;
             switch (projectileType)
             {
                 case ProjectileType.C4:

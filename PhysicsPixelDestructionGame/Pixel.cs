@@ -61,7 +61,7 @@ namespace PhysicsPixelDestructionGame
             {
                 pressure = 0.065f / Rg + 0.397f / (float)Math.Pow(Rg, 2) + 0.322f / (float)Math.Pow(Rg, 3);
             }
-            health -= pressure;
+            health -= 10*pressure;
         }
     }
 }
