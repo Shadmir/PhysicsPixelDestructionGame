@@ -91,7 +91,7 @@ namespace PhysicsPixelDestructionGame
         {
             projectile.Draw(spriteBatch, spritebounds, new Rectangle((int)position.X, (int)position.Y, width, height), Color.White);
         }
-        public void Explode(SoundEffect boom)
+        public virtual void Explode(SoundEffect boom)
         {
             float equiv = TntEquiv[projectileType];
             float Rg;
