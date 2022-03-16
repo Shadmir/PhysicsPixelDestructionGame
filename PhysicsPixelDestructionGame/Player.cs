@@ -8,10 +8,7 @@ using System.Diagnostics;
 
 
 namespace PhysicsPixelDestructionGame
-{
-    //size of player spritesheet is 10x40
-    //change angle of launch with left/right, change power with up/down, make a new object displaying current selected ProjectileType, power, hp, angle follow the player around.
-    //shouldn't be too hard
+{ 
     class Player : MoveableObject
     {
         public Direction facing = Direction.Right;
@@ -33,7 +30,7 @@ namespace PhysicsPixelDestructionGame
         public int jumpStrength = 10;
         public Color color = Color.White;
         public PlayerStatistics statsBoard;
-        public Vector2 launchVel = new Vector2((float)Math.Sqrt(2)/2, (float)Math.Sqrt(2)/2);
+        public Vector2 launchVel = new Vector2((float)Math.Sqrt(2) / 2, (float)Math.Sqrt(2) / 2);
         public Player(Texture2D texture, Texture2D bombs, SpriteFont f, Texture2D wp)
         {
             health = 100f;
@@ -67,7 +64,7 @@ namespace PhysicsPixelDestructionGame
             {
                 pressure = 0.065f / Rg + 0.397f / (float)Math.Pow(Rg, 2) + 0.322f / (float)Math.Pow(Rg, 3);
             }
-            health -= 10*pressure;
+            health -= pressure;
 
         }
         public void UpdatePhysics(GameTime gameTime)
