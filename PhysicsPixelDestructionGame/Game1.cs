@@ -11,7 +11,7 @@ namespace PhysicsPixelDestructionGame
 {
     //TODO: 
     // projectile vectors
-    //projectiles are very very broken
+    //projectiles are very very broken ----- just manipulate a vector in the player class???????/
     public enum ProjectileType
     {
         C4,
