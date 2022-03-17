@@ -130,11 +130,11 @@ namespace PhysicsPixelDestructionGame
             {
                 SetVel(new Vector2(0, velocity.Y));
             }
-            if (keyState.IsKeyDown(Keys.Q) && lastState != keyState)
+            if (keyState.IsKeyDown(Keys.Q) && lastState != keyState && launchType != ProjectileType.HolyHandGrenade)
             {
                 launchType++;
             }
-            if (keyState.IsKeyDown(Keys.E) && lastState != keyState)
+            if (keyState.IsKeyDown(Keys.E) && lastState != keyState && launchType != ProjectileType.C4)
             {
                 launchType--;
             }

@@ -70,37 +70,39 @@ namespace PhysicsPixelDestructionGame
                 if (projectilePos.Intersects(pixelPos))
                 {
                     //Checking if the projectile has somehow found its way inside the floor, and if so,
-                    //moving it out of the 
+                    //moving it out of the floor.
                     Move(new Vector2(0, -10));
                 }
                 if (projectileFuturePos.Intersects(pixelPos))
                 {
                     SetVel(new Vector2(0, 0));
+                    //This is speculative contact, whereby the projectile class checks if it will contact the ground in the future and 
+                    //if it does, make it so that it does not go through the ground.
                 }
-                //speculative contact ^
             }
         }
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
+            //Call the draw method from the sprite so that the projectile shows up on the screen
             projectile.Draw(spriteBatch, spritebounds, new Rectangle((int)position.X, (int)position.Y, width, height), Color.White);
         }
         public virtual void Explode(SoundEffect boom)
         {
-            float equiv = TntEquiv[projectileType];
+            //This is the logic for the projectile exploding and sending a pressure wave out to all other objects.
+            float equiv = TntEquiv[projectileType]; //This pulls the equivalent mass in TNT of the currently selected type. In other words, finds the relative explosive power between the currently selected explosive and TNT.
             float Rg;
             for (int i = 0; i < PhysicsObjects.players.Count; i++)
             {
-                float distance = (PhysicsObjects.players[i].position - position).Length();
-                distance /= 100; //previously established that 10px = 1m. could scale to 100px = 1m if needed
-                Rg = distance / (float)Math.Pow((double)equiv, (double)1.0 / 3.0);
-                PhysicsObjects.players[i].Damage(Rg);
-
+                float distance = (PhysicsObjects.players[i].position - position).Length(); //Find the distance to both players
+                distance /= 100; //Scale the distance so 100px = 1m
+                Rg = distance / (float)Math.Pow((double)equiv, (double)1.0 / 3.0); //Find the distance scaled definition of the explosion.
+                PhysicsObjects.players[i].Damage(Rg); //Send the pressure wave to each player.
             }
             foreach (Pixel pixel in PhysicsObjects.pixels)
             {
-                float distance = (pixel.position - position).Length();
-                distance /= 100;
+                float distance = (pixel.position - position).Length(); //Find the distance to ever pixel of floor.
+                distance /= 100; //Scale the d
                 Rg = distance / (float)Math.Pow((double)equiv, (double)1.0 / 3.0);
                 pixel.Damage(Rg);
             }
