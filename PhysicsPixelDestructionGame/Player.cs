@@ -9,7 +9,7 @@ using System.Diagnostics;
 
 namespace PhysicsPixelDestructionGame
 { 
-    class Player : MoveableObject
+    class Player : MoveableObject //inheriting from the MoveableObject superclass, contains everything to do with the player
     {
         //Defining attributes for the class;
         public Direction facing = Direction.Right;

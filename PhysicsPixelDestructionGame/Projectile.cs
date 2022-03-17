@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Audio;
 
 namespace PhysicsPixelDestructionGame
 {
-    class Projectile : MoveableObject
+    class Projectile : MoveableObject //projectiles are thrown by the players and the main source of damage in the game
     {
         //Defining attributes for the class.
         public Sprite projectile;

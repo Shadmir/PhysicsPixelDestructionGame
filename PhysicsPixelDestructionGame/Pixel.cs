@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace PhysicsPixelDestructionGame
 {
-    class Pixel : MoveableObject //pixels inherit methods and attributes from moveable objects
+    class Pixel : MoveableObject //pixels inherit methods and attributes from moveable objects, they are collideable squares that make up the bulk of the terrain
     {
         //initialising attributed for the class
         public Sprite pixelWithTint;

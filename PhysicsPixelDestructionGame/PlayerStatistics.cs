@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace PhysicsPixelDestructionGame
 {
-    class PlayerStatistics //also referred to throughout the commenting as the GUI
+    class PlayerStatistics //also referred to throughout the commenting as the GUI, a box that shows certain statistics about the player
     {
         //initialise paramaters for the class
         public int currentMass;

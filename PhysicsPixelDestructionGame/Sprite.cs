@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace PhysicsPixelDestructionGame
 {
-    class Sprite
+    class Sprite //a class designed to make it easier to render a texture
     {
         public Texture2D Texture { get; private set; } //sprites have a texture that can be read by anything but can only be set by the constructor
         

@@ -34,7 +34,7 @@ namespace PhysicsPixelDestructionGame
         Playing,
         Won
     }
-    public class Game1 : Game
+    public class Game1 : Game //holds all of the main logic for the game
     {
         //Defining parameters for the game. 
         private GraphicsDeviceManager _graphics;

@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Audio;
 
 namespace PhysicsPixelDestructionGame
 {
-    class ClusterProjectile : Projectile
+    class ClusterProjectile : Projectile //a special projectile that explodes recursively multiple times
     {
         public ClusterProjectile(ProjectileType type, int Mass, Vector2 Pos, Vector2 Vel, Texture2D sheet, Direction initDir, Vector2 launchVel) : base(type, Mass, Pos, Vel, sheet, initDir, launchVel)
         {

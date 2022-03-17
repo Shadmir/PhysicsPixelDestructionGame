@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace PhysicsPixelDestructionGame
 {
-    class Menu
+    class Menu //displayed at the start of the game so players are not immediately dropped into playing
     {
         //menu button coords - (113, 131) -> (322, 336)
         //initialise attributes for the menu
