@@ -102,12 +102,12 @@ namespace PhysicsPixelDestructionGame
             foreach (Pixel pixel in PhysicsObjects.pixels)
             {
                 float distance = (pixel.position - position).Length(); //Find the distance to ever pixel of floor.
-                distance /= 100; //Scale the d
-                Rg = distance / (float)Math.Pow((double)equiv, (double)1.0 / 3.0);
-                pixel.Damage(Rg);
+                distance /= 100; //Scale the distance to 100px = 1m
+                Rg = distance / (float)Math.Pow((double)equiv, (double)1.0 / 3.0); //Find the distance scaled definition of the explosion
+                pixel.Damage(Rg); //Send the pressure wave to each pixel
             }
-            exploded = true;
-            boom.Play();
+            exploded = true; //Flag the projectile to be removed at the end of the turn
+            boom.Play(); //Play the explosion sound effect.
         }
     }
 }
