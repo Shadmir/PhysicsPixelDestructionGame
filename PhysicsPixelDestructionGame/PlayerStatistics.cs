@@ -20,7 +20,7 @@ namespace PhysicsPixelDestructionGame
         public Vector2 backgroundSize;
         public Rectangle bombSpritePosition;
         public Vector2 launchPreview;
-        public Vector2 iPos;
+        public Vector2 inputPosition;
 
         public PlayerStatistics(SpriteFont f, Texture2D b, Texture2D wp)
         {
@@ -49,7 +49,7 @@ namespace PhysicsPixelDestructionGame
             currentAngle = angle;
             cluster = c;
             launchPreview = new Vector2(3 * power * launchVel.X / launchVel.Length(), 3 * power * launchVel.Y / launchVel.Length()); //put the launch preview pixel 3 times as far from the player as the projectile will travel in its first tick alive
-            iPos = inputPos;
+            inputPosition = inputPos;
         }
 
         public void Draw(SpriteBatch spriteBatch) //called once per draw call
@@ -65,7 +65,7 @@ namespace PhysicsPixelDestructionGame
                 {
                     whitePixel.Draw(spriteBatch, position + new Vector2(10, 10), new Vector2(10, 10), Color.Red); //if not a cluster bomb, draw a red square.
                 }
-                whitePixel.Draw(spriteBatch, iPos + launchPreview, new Vector2(5, 5), new Color(255, 0, 255)); //draw a pink pixel at the position of launchpreview
+                whitePixel.Draw(spriteBatch, inputPosition + launchPreview, new Vector2(5, 5), new Color(255, 0, 255)); //draw a pink pixel at the position of launchpreview
                 switch (currentSelectedType) //select the correct image to draw the currently selected projectile type
                 {
                     case ProjectileType.C4:

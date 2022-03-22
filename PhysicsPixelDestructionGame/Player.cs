@@ -16,7 +16,6 @@ namespace PhysicsPixelDestructionGame
         private KeyboardState keyState;
         private KeyboardState lastState;
         public MouseState mouse;
-        public List<Projectile> bombs = new List<Projectile>();
         public Sprite playerPicture;
         public Texture2D bombSheet;
         public ProjectileType launchType = ProjectileType.C4;
